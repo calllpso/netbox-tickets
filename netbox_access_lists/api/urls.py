@@ -1,3 +1,6 @@
+# netbox_access_lists | tickets
+# accesslist_list | tickets
+
 from netbox.api.routers import NetBoxRouter
 from . import views
 

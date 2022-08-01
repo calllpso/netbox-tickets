@@ -1,6 +1,3 @@
-#netbox_access_lists | tickets
-#accesslist_list | tickets
-
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from netbox.models import NetBoxModel
@@ -41,12 +38,9 @@ class AccessList(NetBoxModel):
 
     def get_default_action_color(self):
         return ActionChoices.colors.get(self.default_action)
-
-    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     
     def get_absolute_url(self):
         return reverse('plugins:tickets_plugin:accesslist', args=[self.pk])
-        # return reverse('plugins:netbox_access_lists:accesslist', args=[self.pk])
 
 class AccessListRule(NetBoxModel):
     access_list = models.ForeignKey(
@@ -112,8 +106,6 @@ class AccessListRule(NetBoxModel):
 
     def get_action_color(self):
         return ActionChoices.colors.get(self.action)
-
-    ##!!!!!!!!!!!!!!!
+        
     def get_absolute_url(self):
-        # return reverse('plugins:netbox_access_lists:accesslistrule', args=[self.pk])
         return reverse('plugins:tickets_plugin:accesslistrule', args=[self.pk])

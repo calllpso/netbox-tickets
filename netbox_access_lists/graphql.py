@@ -1,3 +1,6 @@
+#netbox_access_lists | tickets
+#accesslist_list | tickets
+
 from graphene import ObjectType
 from netbox.graphql.types import NetBoxObjectType
 from netbox.graphql.fields import ObjectField, ObjectListField

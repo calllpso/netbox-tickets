@@ -1,6 +1,3 @@
-#netbox_access_lists | tickets
-#accesslist_list | tickets
-
 from netbox.filtersets import NetBoxModelFilterSet
 from .models import AccessListRule
 

@@ -1,6 +1,3 @@
-#netbox_access_lists | tickets
-#accesslist_list | tickets
-
 from netbox.views import generic
 from . import forms, models, tables
 from django.db.models import Count
@@ -31,8 +28,6 @@ class AccessListEditView(generic.ObjectEditView):
 class AccessListDeleteView(generic.ObjectDeleteView):
     queryset = models.AccessList.objects.all()
 
-
-#################################
 class AccessListRuleView(generic.ObjectView):
     queryset = models.AccessListRule.objects.all()
 

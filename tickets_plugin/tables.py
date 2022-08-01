@@ -1,11 +1,7 @@
-#netbox_access_lists | tickets
-#accesslist_list | tickets
-
 import django_tables2 as tables
 
 from netbox.tables import NetBoxTable, ChoiceFieldColumn
 from .models import AccessList, AccessListRule
-
 
 class AccessListTable(NetBoxTable):
     name = tables.Column(

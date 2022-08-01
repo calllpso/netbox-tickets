@@ -1,3 +1,6 @@
+# netbox_access_lists | tickets
+# accesslist_list | tickets
+
 from rest_framework import serializers
 
 from netbox.api.serializers import NetBoxModelSerializer, WritableNestedSerializer
@@ -7,7 +10,7 @@ from ipam.api.serializers import NestedPrefixSerializer
 
 class NestedAccessListSerializer(WritableNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name='plugins-api:netbox_access_lists-api:accesslist-detail'
+        view_name='plugins-api:tickets-api:accesslist-detail'
     )
 
     class Meta:
@@ -16,7 +19,7 @@ class NestedAccessListSerializer(WritableNestedSerializer):
 
 class NestedAccessListRuleSerializer(WritableNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name='plugins-api:netbox_access_lists-api:accesslistrule-detail'
+        view_name='plugins-api:tickets-api:accesslistrule-detail'
     )
 
     class Meta:
@@ -26,7 +29,7 @@ class NestedAccessListRuleSerializer(WritableNestedSerializer):
 
 class AccessListSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name='plugins-api:netbox_access_lists-api:accesslist-detail'
+        view_name='plugins-api:tickets-api:accesslist-detail'
     )
     rule_count = serializers.IntegerField(read_only=True)
     class Meta:
@@ -43,7 +46,7 @@ class AccessListSerializer(NetBoxModelSerializer):
 
 class AccessListRuleSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name='plugins-api:netbox_access_lists-api:accesslistrule-detail'
+        view_name='plugins-api:tickets-api:accesslistrule-detail'
     )
     access_list = NestedAccessListSerializer()
     source_prefix = NestedPrefixSerializer()

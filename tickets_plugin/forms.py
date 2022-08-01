@@ -1,6 +1,3 @@
-#netbox_access_lists | tickets
-#accesslist_list | tickets
-
 from ipam.models import Prefix
 from netbox.forms import NetBoxModelForm
 from utilities.forms.fields import CommentField, DynamicModelChoiceField

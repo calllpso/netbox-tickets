@@ -1,6 +1,3 @@
-#netbox_access_lists | tickets
-#accesslist_list | tickets
-
 from django.urls import path
 from . import models, views
 from netbox.views.generic import ObjectChangeLogView

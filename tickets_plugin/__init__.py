@@ -1,10 +1,11 @@
 from extras.plugins import PluginConfig
 
-class NetBoxAccessListsConfig(PluginConfig):
+class NetBox_TicketsListsConfig(PluginConfig):
     name = 'tickets_plugin'
-    verbose_name = ' NetBox Access Lists'
-    description = 'Manage simple ACLs in NetBox'
-    version = '0.1'
-    base_url = 'access-lists'
+    verbose_name = 'bla-bla verbose_name'
+    description = 'this description'
+    version = '0.00000001'
+    base_url = 'tickets-plug'
 
-config = NetBoxAccessListsConfig
+#устанавливает
+config = NetBox_TicketsListsConfig

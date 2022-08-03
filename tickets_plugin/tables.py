@@ -1,25 +1,26 @@
 import django_tables2 as tables
 
 from netbox.tables import NetBoxTable, ChoiceFieldColumn
-from .models import AccessList, AccessListRule
+from .models import TicketList, AccessListRule
 
-class AccessListTable(NetBoxTable):
-    name = tables.Column(
-        linkify=True
-    )
-    default_action = ChoiceFieldColumn()
-    rule_count = tables.Column()
+# pk and actions columns render the checkbox selectors and dropdown menus
+class TicketListTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
-        model = AccessList
-        fields = ('pk', 'id', 'name', 'rule_count', 'default_action', 'comments', 'actions')
-        default_columns = ('name', 'rule_count', 'default_action')
+        model = TicketList
+        fields = ('pk', 'id', 'name', 'rule_count', 'status', 'id_directum', 'actions')
+        default_columns = ('name', 'rule_count', 'status')
+        name = tables.Column(
+            linkify=True
+        )
+        status = ChoiceFieldColumn()
 
 
 class AccessListRuleTable(NetBoxTable):
-    access_list = tables.Column(
+    ticket_list = tables.Column(
         linkify=True
     )
+    ticket_id = tables.Column()
     index = tables.Column(
         linkify=True
     )
@@ -29,10 +30,10 @@ class AccessListRuleTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = AccessListRule
         fields = (
-            'pk', 'id', 'access_list', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
-            'destination_ports', 'protocol', 'action', 'description', 'actions',
+            'pk', 'id', 'ticket_list', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
+            'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'actions',
         )
         default_columns = (
-            'access_list', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
-            'destination_ports', 'protocol', 'action', 'actions',
+            'ticket_list', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
+            'destination_ports', 'protocol', 'action', 'opened', 'closed', 'actions',
         )

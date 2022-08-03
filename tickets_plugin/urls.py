@@ -3,18 +3,16 @@ from . import models, views
 from netbox.views.generic import ObjectChangeLogView
 
 urlpatterns = (
-
-    # Access lists
-    path('access-lists/', views.AccessListListView.as_view(), name='tickets'),
-    path('access-lists/add/', views.AccessListEditView.as_view(), name='accesslist_add'),
-    path('access-lists/<int:pk>/', views.AccessListView.as_view(), name='accesslist'),
-    path('access-lists/<int:pk>/edit/', views.AccessListEditView.as_view(), name='accesslist_edit'),
-    path('access-lists/<int:pk>/delete/', views.AccessListDeleteView.as_view(), name='accesslist_delete'),
-
-    path('access-lists/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='accesslist_changelog', kwargs={
-        'model': models.AccessList
+    # Ticket lists
+    path('ticket-list/', views.TicketListListView.as_view(), name='ticketlist_list'),
+    path('ticket-list/add/', views.TicketListEditView.as_view(), name='ticketlist_add'),
+    path('ticket-list/<int:pk>/', views.TicketListView.as_view(), name='ticketlist'),
+    path('ticket-list/<int:pk>/edit/', views.TicketListEditView.as_view(), name='ticketlist_edit'),
+    path('ticket-list/<int:pk>/delete/', views.TicketListDeleteView.as_view(), name='ticketlist_delete'),
+    
+    path('ticket-list/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='ticketlist_changelog', kwargs={
+        'model': models.TicketList
     }),
-
 
     # Access list rules
     path('rules/', views.AccessListRuleListView.as_view(), name='accesslistrule_list'),
@@ -27,4 +25,3 @@ urlpatterns = (
         'model': models.AccessListRule
     }),
 )
-

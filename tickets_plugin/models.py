@@ -1,111 +1,112 @@
+from utilities.choices import ChoiceSet
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from netbox.models import NetBoxModel
-from utilities.choices import ChoiceSet
 from django.urls import reverse
 
+class TicketList_Action(ChoiceSet):
+    key = 'TicketList.status'
+    CHOICES = [
+        ('active', 'Active', 'green'),
+        ('inactive', 'Inactive', 'red'),
+        ('staged', 'Staged', 'orange'),
+    ]
 
-class ActionChoices(ChoiceSet):
+class AccessListRule_Action(ChoiceSet):
     key = 'AccessListRule.action'
     CHOICES = [
         ('permit', 'Permit', 'green'),
-        ('deny', 'Deny', 'red'),
-        ('reject', 'Reject (Reset)', 'orange'),
+        ('drop', 'Drop', 'red'),
     ]
 
-class ProtocolChoices(ChoiceSet):
+class AccessListRule_Protocol(ChoiceSet):
     CHOICES = [
+        ('ip', 'IP', 'green'),
         ('tcp', 'TCP', 'blue'),
         ('udp', 'UDP', 'orange'),
         ('icmp', 'ICMP', 'purple'),
     ]
 
-class AccessList(NetBoxModel):
+class TicketList(NetBoxModel):
     name = models.CharField(
         max_length=100
     )
-    default_action = models.CharField(
+    status = models.CharField(
         max_length=30,
-        choices=ActionChoices
+        choices=TicketList_Action
     )
-    comments = models.TextField(
-        blank=True
+    id_directum = models.CharField(
+        max_length=100
     )
     class Meta:
         ordering = ('name',)
+
     def __str__(self):
         return self.name
-
+    
     def get_default_action_color(self):
-        return ActionChoices.colors.get(self.default_action)
+        return TicketList_Action.colors.get(self.status)
     
     def get_absolute_url(self):
-        return reverse('plugins:tickets_plugin:accesslist', args=[self.pk])
+        return reverse('plugins:tickets_plugin:ticketlist', args=[self.pk])
 
 class AccessListRule(NetBoxModel):
-    access_list = models.ForeignKey(
-        to=AccessList,
+    ticket_list = models.ForeignKey(
+        to=TicketList,
         on_delete=models.CASCADE,
         related_name='rules'
     )
-
-    index = models.PositiveIntegerField()
-
-    protocol = models.CharField(
+    ticket_id = models.CharField(
         max_length=30,
-        choices=ProtocolChoices,
-        blank=True
     )
-
-    source_prefix = models.ForeignKey(
-        to='ipam.Prefix',
-        on_delete=models.PROTECT,
-        related_name='+',
-        blank=True,
-        null=True
+    index = models.PositiveIntegerField()
+    
+    source_prefix = models.CharField(
+        max_length=30,
     )
-
     source_ports = ArrayField(
         base_field=models.PositiveIntegerField(),
-        blank=True,
-        null=True
     )
-
-    destination_prefix = models.ForeignKey(
-        to='ipam.Prefix',
-        on_delete=models.PROTECT,
-        related_name='+',
-        blank=True,
-        null=True
+    destination_prefix = models.CharField(
+        max_length=30,
     )
     destination_ports = ArrayField(
         base_field=models.PositiveIntegerField(),
-        blank=True,
-        null=True
     )
-
+    protocol = models.CharField(
+        max_length=30,
+        choices=AccessListRule_Protocol,
+        blank=True
+    )
     action = models.CharField(
         max_length=30,
-        choices=ActionChoices
+        choices=AccessListRule_Action
     )
 
     description = models.CharField(
         max_length=500,
         blank=True
     )
-    
+
+    opened = models.CharField(
+        max_length=30
+    )
+    closed = models.CharField(
+        max_length=30
+    )
+
     class Meta:
-        ordering = ('access_list', 'index')
-        unique_together = ('access_list', 'index')
+        ordering = ('ticket_list', 'index')
+        unique_together = ('ticket_list', 'index')
 
     def __str__(self):
-        return f'{self.access_list}: Rule {self.index}'
+        return f'{self.ticket_list}: Rule {self.index}'
 
     def get_protocol_color(self):
-        return ProtocolChoices.colors.get(self.protocol)
+        return AccessListRule_Protocol.colors.get(self.protocol)
 
     def get_action_color(self):
-        return ActionChoices.colors.get(self.action)
-        
+        return AccessListRule_Action.colors.get(self.action)
+
     def get_absolute_url(self):
         return reverse('plugins:tickets_plugin:accesslistrule', args=[self.pk])

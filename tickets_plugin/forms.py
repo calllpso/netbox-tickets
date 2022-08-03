@@ -1,54 +1,53 @@
-from ipam.models import Prefix
 from netbox.forms import NetBoxModelForm
 from utilities.forms.fields import CommentField, DynamicModelChoiceField
-from .models import AccessList, AccessListRule
+from .models import TicketList, AccessListRule
 
+from netbox.forms import NetBoxModelFilterSetForm
 from django import forms
-from netbox.forms import NetBoxModelForm, NetBoxModelFilterSetForm
-from .models import AccessList, AccessListRule, ActionChoices, ProtocolChoices
+from .models import AccessListRule_Action, AccessListRule_Protocol
 
-class AccessListForm(NetBoxModelForm):
+class TicketListForm(NetBoxModelForm):
     comments = CommentField()
 
     class Meta:
-        model = AccessList
-        fields = ('name', 'default_action', 'comments', 'tags')
+        model = TicketList
+        fields = ('name', 'status', 'id_directum', 'tags')
 
 class AccessListRuleForm(NetBoxModelForm):
+    
+    
     access_list = DynamicModelChoiceField(
-        queryset=AccessList.objects.all()
-    )
-    source_prefix = DynamicModelChoiceField(
-        queryset=Prefix.objects.all()
-    )
-    destination_prefix = DynamicModelChoiceField(
-        queryset=Prefix.objects.all()
+        queryset=TicketList.objects.all()
     )
 
     class Meta:
         model = AccessListRule
         fields = (
-            'access_list', 'index', 'description', 'source_prefix', 'source_ports', 'destination_prefix',
-            'destination_ports', 'protocol', 'action', 'tags',
+            'ticket_list', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
+            'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'tags',
         )
+
+
 
 class AccessListRuleFilterForm(NetBoxModelFilterSetForm):
     model = AccessListRule
 
     access_list = forms.ModelMultipleChoiceField(
-        queryset=AccessList.objects.all(),
+        queryset=TicketList.objects.all(),
         required=False
-    )
+        )
 
     index = forms.IntegerField(
         required=False
     )
 
     protocol = forms.MultipleChoiceField(
-        choices=ProtocolChoices,
+        choices=AccessListRule_Protocol,
         required=False
     )
     action = forms.MultipleChoiceField(
-        choices=ActionChoices,
+        choices=AccessListRule_Action,
         required=False
     )
+    
+

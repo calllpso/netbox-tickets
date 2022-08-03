@@ -4,9 +4,10 @@ from django.db.models import Count
 
 from . import filtersets, forms, models, tables
 
-class AccessListView(generic.ObjectView):
-    queryset = models.AccessList.objects.all()
+class TicketListView(generic.ObjectView):
+    queryset = models.TicketList.objects.all()
 
+    #счетчик rules
     def get_extra_context(self, request, instance):
         table = tables.AccessListRuleTable(instance.rules.all())
         table.configure(request)
@@ -15,29 +16,33 @@ class AccessListView(generic.ObjectView):
             'rules_table': table,
         }
 
-class AccessListListView(generic.ObjectListView):
-    queryset = models.AccessList.objects.annotate(
+
+
+class TicketListListView(generic.ObjectListView):
+    queryset = models.TicketList.objects.annotate(
         rule_count=Count('rules')
     )
-    table = tables.AccessListTable
+    table = tables.TicketListTable
 
-class AccessListEditView(generic.ObjectEditView):
-    queryset = models.AccessList.objects.all()
-    form = forms.AccessListForm
+class TicketListEditView(generic.ObjectEditView):
+    queryset = models.TicketList.objects.all()
+    form = forms.TicketListForm
 
-class AccessListDeleteView(generic.ObjectDeleteView):
-    queryset = models.AccessList.objects.all()
+class TicketListDeleteView(generic.ObjectDeleteView):
+    queryset = models.TicketList.objects.all()
 
+
+
+
+#one
 class AccessListRuleView(generic.ObjectView):
     queryset = models.AccessListRule.objects.all()
 
-
+#many
 class AccessListRuleListView(generic.ObjectListView):
     queryset = models.AccessListRule.objects.all()
-    table = tables.AccessListRuleTable
-    filterset = filtersets.AccessListRuleFilterSet
-    filterset_form = forms.AccessListRuleFilterForm
-
+    table = tables.AccessListRuleTable ###
+    
 
 class AccessListRuleEditView(generic.ObjectEditView):
     queryset = models.AccessListRule.objects.all()
@@ -46,3 +51,15 @@ class AccessListRuleEditView(generic.ObjectEditView):
 
 class AccessListRuleDeleteView(generic.ObjectDeleteView):
     queryset = models.AccessListRule.objects.all()
+
+
+
+
+
+
+
+class AccessListRuleListView(generic.ObjectListView):
+    queryset = models.AccessListRule.objects.all()
+    table = tables.AccessListRuleTable
+    filterset = filtersets.AccessListRuleFilterSet
+    filterset_form = forms.AccessListRuleFilterForm

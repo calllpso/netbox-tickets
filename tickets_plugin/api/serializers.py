@@ -1,0 +1,35 @@
+from rest_framework import serializers
+
+from netbox.api.serializers import NetBoxModelSerializer
+from ..models import TicketList, AccessListRule
+
+
+
+class TicketListSerializer(NetBoxModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        ###detail
+        view_name='plugins-api:tickets_plugin-api:ticketlist-detail'
+    )
+    ###?
+    rule_count = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = TicketList
+        fields = (
+            'id', 'display', 'name', 'status', 'id_directum', 'tags', 'custom_fields', 'created',
+            'last_updated', 'url', 'rule_count'
+        )
+        
+
+class AccessListRuleSerializer(NetBoxModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='plugins-api:tickets_plugin-api:accesslistrule-detail'
+    )
+
+    class Meta:
+        model = AccessListRule
+        fields = (
+            'id', 'url', 'display', 'ticket_list', 'ticket_id', 'index', 'protocol', 'source_prefix', 'source_ports',
+            'destination_prefix', 'destination_ports', 'action', 'tags', 'custom_fields', 'created',
+            'last_updated', 'opened', 'closed'
+        )

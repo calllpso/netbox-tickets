@@ -4,7 +4,7 @@ from django.db import models
 from netbox.models import NetBoxModel
 from django.urls import reverse
 
-class TicketList_Action(ChoiceSet):
+class TicketList_status(ChoiceSet):
     key = 'TicketList.status'
     CHOICES = [
         ('active', 'Active', 'green'),
@@ -33,19 +33,27 @@ class TicketList(NetBoxModel):
     )
     status = models.CharField(
         max_length=30,
-        choices=TicketList_Action
+        choices=TicketList_status,
+        blank=True
     )
     id_directum = models.CharField(
-        max_length=100
+        max_length=100,
+        blank=True
     )
+
+    description = models.CharField(
+        max_length=500,
+        blank=True
+    )
+
     class Meta:
         ordering = ('name',)
 
     def __str__(self):
         return self.name
     
-    def get_default_action_color(self):
-        return TicketList_Action.colors.get(self.status)
+    def get_status_color(self):
+        return TicketList_status.colors.get(self.status)
     
     def get_absolute_url(self):
         return reverse('plugins:tickets_plugin:ticketlist', args=[self.pk])
@@ -59,19 +67,25 @@ class AccessListRule(NetBoxModel):
     ticket_id = models.CharField(
         max_length=30,
     )
-    index = models.PositiveIntegerField()
+    index = models.PositiveIntegerField( 
+        # blank=True
+    )
     
     source_prefix = models.CharField(
         max_length=30,
+        blank=True
     )
     source_ports = ArrayField(
         base_field=models.PositiveIntegerField(),
+        blank=True
     )
     destination_prefix = models.CharField(
         max_length=30,
+        blank=True
     )
     destination_ports = ArrayField(
         base_field=models.PositiveIntegerField(),
+        blank=True
     )
     protocol = models.CharField(
         max_length=30,
@@ -80,7 +94,8 @@ class AccessListRule(NetBoxModel):
     )
     action = models.CharField(
         max_length=30,
-        choices=AccessListRule_Action
+        choices=AccessListRule_Action,
+        blank=True
     )
 
     description = models.CharField(
@@ -89,10 +104,12 @@ class AccessListRule(NetBoxModel):
     )
 
     opened = models.CharField(
-        max_length=30
+        max_length=30,
+        blank=True
     )
     closed = models.CharField(
-        max_length=30
+        max_length=30,
+        blank=True
     )
 
     class Meta:

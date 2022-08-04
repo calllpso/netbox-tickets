@@ -7,16 +7,15 @@ from django import forms
 from .models import AccessListRule_Action, AccessListRule_Protocol
 
 class TicketListForm(NetBoxModelForm):
-    comments = CommentField()
+    # comments = CommentField() не нужно
 
     class Meta:
         model = TicketList
         fields = ('name', 'status', 'id_directum', 'tags')
 
 class AccessListRuleForm(NetBoxModelForm):
-    
-    
-    access_list = DynamicModelChoiceField(
+    ###из названия ниже берет создает поле в форме создания
+    ticket_list = DynamicModelChoiceField(
         queryset=TicketList.objects.all()
     )
 
@@ -32,7 +31,8 @@ class AccessListRuleForm(NetBoxModelForm):
 class AccessListRuleFilterForm(NetBoxModelFilterSetForm):
     model = AccessListRule
 
-    access_list = forms.ModelMultipleChoiceField(
+    ###из названия ниже берет создает поле в форме создания
+    ticket_list = forms.ModelMultipleChoiceField(
         queryset=TicketList.objects.all(),
         required=False
         )

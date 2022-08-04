@@ -5,11 +5,16 @@ from .models import TicketList, AccessListRule
 
 # pk and actions columns render the checkbox selectors and dropdown menus
 class TicketListTable(NetBoxTable):
+    name = tables.Column(
+        linkify=True
+    )
+    status = ChoiceFieldColumn()
+    rule_count = tables.Column()
 
     class Meta(NetBoxTable.Meta):
         model = TicketList
-        fields = ('pk', 'id', 'name', 'rule_count', 'status', 'id_directum', 'actions')
-        default_columns = ('name', 'rule_count', 'status')
+        fields = ('pk', 'id', 'name', 'rule_count', 'status', 'id_directum', 'actions', 'description')
+        default_columns = ('name', 'rule_count', 'status', 'description')
         name = tables.Column(
             linkify=True
         )

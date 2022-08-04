@@ -4,6 +4,8 @@ from django.db import models
 from netbox.models import NetBoxModel
 from django.urls import reverse
 
+from ipam.fields import IPNetworkField, IPAddressField
+
 class TicketList_status(ChoiceSet):
     key = 'TicketList.status'
     CHOICES = [
@@ -71,17 +73,17 @@ class AccessListRule(NetBoxModel):
         # blank=True
     )
     
-    source_prefix = models.CharField(
-        max_length=30,
-        blank=True
+    source_prefix = IPAddressField(
+        help_text='IPv4 or IPv6 address (with mask)',
+        blank=True, null=True, default=None
     )
     source_ports = ArrayField(
         base_field=models.PositiveIntegerField(),
         blank=True
     )
-    destination_prefix = models.CharField(
-        max_length=30,
-        blank=True
+    destination_prefix = IPAddressField(
+        help_text='IPv4 or IPv6 address (with mask)',
+        blank=True, null=True, default=None
     )
     destination_ports = ArrayField(
         base_field=models.PositiveIntegerField(),

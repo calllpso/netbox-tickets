@@ -6,10 +6,17 @@ from ..models import TicketList, AccessListRule
 
 from netbox.api.serializers import WritableNestedSerializer
 
+from ipam.api.nested_serializers import (
+    NestedPrefixSerializer,
+)
+
+
 class NestedTicketListSerializer(WritableNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
         view_name='plugins-api:tickets_plugin-api:ticketlist-detail'
     )
+
+
 
     class Meta:
         model = TicketList
@@ -50,6 +57,7 @@ class AccessListRuleSerializer(NetBoxModelSerializer):
         view_name='plugins-api:tickets_plugin-api:accesslistrule-detail'
     )
     ticket_list = NestedTicketListSerializer()
+
 
     class Meta:
         model = AccessListRule

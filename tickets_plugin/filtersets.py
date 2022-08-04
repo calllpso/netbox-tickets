@@ -1,12 +1,22 @@
 from netbox.filtersets import NetBoxModelFilterSet
 from .models import AccessListRule
 
+from django.db.models import Q
+
+
+from utilities.filters import MultiValueCharFilter
+
 class AccessListRuleFilterSet(NetBoxModelFilterSet):
+    source_prefix = MultiValueCharFilter()
+    destination_prefix = MultiValueCharFilter()
 
     class Meta:
         model = AccessListRule
-        fields = ('id','ticket_list','index','protocol', 
-            'action', 'opened', 'closed')
+        fields = ('id','ticket_list','ticket_id','index',
+            'protocol','action','description',
+            'opened','closed', 'source_prefix','destination_prefix'
+        ) 
 
-    def search(self, queryset, name, value):
-        return queryset.filter(description__icontains=value)
+
+
+    

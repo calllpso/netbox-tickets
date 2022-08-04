@@ -15,5 +15,6 @@ class AccessListRuleViewSet(NetBoxModelViewSet):
     queryset = models.AccessListRule.objects.prefetch_related(
         'ticket_list', 'tags'
     )
+    #  'source_prefix', 'destination_prefix',
     serializer_class = AccessListRuleSerializer
     filterset_class = filtersets.AccessListRuleFilterSet

@@ -6,6 +6,7 @@ from netbox.forms import NetBoxModelFilterSetForm
 from django import forms
 from .models import AccessListRule_Action, AccessListRule_Protocol
 
+
 class TicketListForm(NetBoxModelForm):
     # comments = CommentField() не нужно
 
@@ -49,5 +50,27 @@ class AccessListRuleFilterForm(NetBoxModelFilterSetForm):
         choices=AccessListRule_Action,
         required=False
     )
-    
 
+    opened = forms.CharField(
+        required=False
+    )
+
+    closed = forms.CharField(
+        required=False
+    )
+
+    ticket_id = forms.IntegerField(
+        required=False
+    )
+
+    source_prefix = forms.GenericIPAddressField(
+        required=False
+    )
+
+    destination_prefix = forms.GenericIPAddressField(
+        required=False
+    )
+
+    description = forms.CharField(
+        required=False
+    )

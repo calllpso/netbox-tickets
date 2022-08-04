@@ -22,12 +22,12 @@ accesslistrule_butons = [
 menu_items = (
     PluginMenuItem(
         link='plugins:tickets_plugin:ticketlist_list',
-        link_text='Ticket Lists',
+        link_text='Tickets',
         buttons=ticketlist_buttons
     ),
     PluginMenuItem(
         link='plugins:tickets_plugin:accesslistrule_list',
-        link_text='Access List Rules',
+        link_text='Ticket Rules',
         buttons=accesslistrule_butons
     ),
 )

@@ -23,6 +23,9 @@ class TicketListListView(generic.ObjectListView):
         rule_count=Count('rules')
     )
     table = tables.TicketListTable
+    ############
+    filterset = filtersets.TicketListFilterSet
+    filterset_form = forms.TicketListFilterForm
 
 class TicketListEditView(generic.ObjectEditView):
     queryset = models.TicketList.objects.all()
@@ -42,6 +45,8 @@ class AccessListRuleView(generic.ObjectView):
 class AccessListRuleListView(generic.ObjectListView):
     queryset = models.AccessListRule.objects.all()
     table = tables.AccessListRuleTable ###
+    filterset = filtersets.AccessListRuleFilterSet
+    filterset_form = forms.AccessListRuleFilterForm
     
 
 class AccessListRuleEditView(generic.ObjectEditView):
@@ -58,8 +63,3 @@ class AccessListRuleDeleteView(generic.ObjectDeleteView):
 
 
 
-class AccessListRuleListView(generic.ObjectListView):
-    queryset = models.AccessListRule.objects.all()
-    table = tables.AccessListRuleTable
-    filterset = filtersets.AccessListRuleFilterSet
-    filterset_form = forms.AccessListRuleFilterForm

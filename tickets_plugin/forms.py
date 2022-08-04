@@ -74,3 +74,23 @@ class AccessListRuleFilterForm(NetBoxModelFilterSetForm):
     description = forms.CharField(
         required=False
     )
+
+
+
+
+class TicketListFilterForm(NetBoxModelFilterSetForm):
+    model = TicketList
+
+    name = forms.CharField(
+        required=False
+    )
+
+    id_directum = forms.CharField(
+        required=False
+    )
+
+    description = forms.CharField(
+        required=False
+    )
+
+    # 'status'

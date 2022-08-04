@@ -1,7 +1,5 @@
 from netbox.filtersets import NetBoxModelFilterSet
-from .models import AccessListRule
-
-from django.db.models import Q
+from .models import AccessListRule, TicketList
 
 
 from utilities.filters import MultiValueCharFilter
@@ -17,6 +15,15 @@ class AccessListRuleFilterSet(NetBoxModelFilterSet):
             'opened','closed', 'source_prefix','destination_prefix'
         ) 
 
+
+class TicketListFilterSet(NetBoxModelFilterSet):
+    id_directum = MultiValueCharFilter()
+    class Meta:
+        model = TicketList
+
+        fields = ('id','name','status','id_directum',
+            'description'
+        ) 
 
 
     

@@ -26,11 +26,6 @@ class AccessListRuleForm(NetBoxModelForm):
             'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
             'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'tags',
         )
-        # fields = (
-        #     'ticket_list', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
-        #     'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'tags',
-        # )
-
 
 
 class AccessListRuleFilterForm(NetBoxModelFilterSetForm):

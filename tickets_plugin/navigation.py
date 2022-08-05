@@ -10,14 +10,14 @@ ticketlist_buttons = [
     )
 ]
 
-accesslistrule_butons = [
-    PluginMenuButton(
-        link='plugins:tickets_plugin:accesslistrule_add',
-        title='Add',
-        icon_class='mdi mdi-plus-thick',
-        color=ButtonColorChoices.GREEN
-    )
-]
+# accesslistrule_butons = [
+#     PluginMenuButton(
+#         link='plugins:tickets_plugin:accesslistrule_add',
+#         title='Add',
+#         icon_class='mdi mdi-plus-thick',
+#         color=ButtonColorChoices.GREEN
+#     )
+# ]
 
 menu_items = (
     PluginMenuItem(
@@ -28,7 +28,7 @@ menu_items = (
     PluginMenuItem(
         link='plugins:tickets_plugin:accesslistrule_list',
         link_text='Ticket Rules',
-        buttons=accesslistrule_butons
+        # buttons=accesslistrule_butons
     ),
 )
 

@@ -6,9 +6,9 @@ from ..models import TicketList, AccessListRule
 
 from netbox.api.serializers import WritableNestedSerializer
 
-from ipam.api.nested_serializers import (
-    NestedPrefixSerializer,
-)
+# from ipam.api.nested_serializers import (
+#     NestedPrefixSerializer,
+# )
 
 
 class NestedTicketListSerializer(WritableNestedSerializer):

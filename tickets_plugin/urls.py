@@ -9,7 +9,6 @@ urlpatterns = (
     path('ticket-list/<int:pk>/', views.TicketListView.as_view(), name='ticketlist'),
     path('ticket-list/<int:pk>/edit/', views.TicketListEditView.as_view(), name='ticketlist_edit'),
     path('ticket-list/<int:pk>/delete/', views.TicketListDeleteView.as_view(), name='ticketlist_delete'),
-    
     path('ticket-list/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='ticketlist_changelog', kwargs={
         'model': models.TicketList
     }),

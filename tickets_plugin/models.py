@@ -81,7 +81,7 @@ class AccessListRule(NetBoxModel):
         blank=True, null=True, default=None
     )
     source_ports = ArrayField(
-        base_field=models.PositiveIntegerField(),
+        base_field=models.CharField(max_length=50),
         blank=True
     )
     destination_prefix = IPAddressField(
@@ -89,7 +89,7 @@ class AccessListRule(NetBoxModel):
         blank=True, null=True, default=None
     )
     destination_ports = ArrayField(
-        base_field=models.PositiveIntegerField(),
+        base_field=models.CharField(max_length=50),
         blank=True
     )
     protocol = models.CharField(

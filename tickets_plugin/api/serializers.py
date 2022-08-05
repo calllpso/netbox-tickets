@@ -20,7 +20,8 @@ class NestedTicketListSerializer(WritableNestedSerializer):
 
     class Meta:
         model = TicketList
-        fields = ('id', 'url', 'display', 'name')
+        fields = ('id', 'url', 'display', 'ticket_id')
+        # fields = ('id', 'url', 'display', 'name')
 
 class NestedAccessListRuleSerializer(WritableNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
@@ -45,9 +46,8 @@ class TicketListSerializer(NetBoxModelSerializer):
 
     class Meta:
         model = TicketList
-        # 'journal'
         fields = (
-            'id', 'display', 'name', 'status', 'id_directum', 'tags', 'custom_fields', 'created',
+            'id', 'display', 'ticket_id', 'status', 'id_directum', 'tags', 'custom_fields', 'created',
             'last_updated', 'url', 'rule_count', 'description'
         )
    
@@ -56,13 +56,14 @@ class AccessListRuleSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(
         view_name='plugins-api:tickets_plugin-api:accesslistrule-detail'
     )
-    ticket_list = NestedTicketListSerializer()
+    ticket_id = NestedTicketListSerializer()
 
 
     class Meta:
         model = AccessListRule
         fields = (
-            'id', 'url', 'display', 'ticket_list', 'ticket_id', 'index', 'protocol', 'source_prefix', 'source_ports',
+            'id', 'url', 'display', 'ticket_id', 'index', 'protocol', 'source_prefix', 'source_ports',
             'destination_prefix', 'destination_ports', 'action', 'tags', 'custom_fields', 'created',
             'last_updated', 'opened', 'closed'
         )
+        

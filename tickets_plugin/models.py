@@ -30,7 +30,7 @@ class AccessListRule_Protocol(ChoiceSet):
     ]
 
 class TicketList(NetBoxModel):
-    name = models.CharField(
+    ticket_id = models.CharField(
         max_length=100
     )
     status = models.CharField(
@@ -48,11 +48,15 @@ class TicketList(NetBoxModel):
         blank=True
     )
 
+    comments = models.TextField(
+        blank=True
+    )
+
     class Meta:
-        ordering = ('name',)
+        ordering = ('ticket_id',)
 
     def __str__(self):
-        return self.name
+        return self.ticket_id
     
     def get_status_color(self):
         return TicketList_status.colors.get(self.status)
@@ -61,17 +65,16 @@ class TicketList(NetBoxModel):
         return reverse('plugins:tickets_plugin:ticketlist', args=[self.pk])
 
 class AccessListRule(NetBoxModel):
-    ticket_list = models.ForeignKey(
+
+    ticket_id = models.ForeignKey(
         to=TicketList,
         on_delete=models.CASCADE,
         related_name='rules'
     )
-    ticket_id = models.CharField(
-        max_length=30,
-    )
-    index = models.PositiveIntegerField( 
-        # blank=True
-    )
+
+
+
+    index = models.PositiveIntegerField()
     
     source_prefix = IPAddressField(
         help_text='IPv4 or IPv6 address (with mask)',
@@ -115,11 +118,11 @@ class AccessListRule(NetBoxModel):
     )
 
     class Meta:
-        ordering = ('ticket_list', 'index')
-        unique_together = ('ticket_list', 'index')
+        ordering = ('ticket_id', 'index')
+        unique_together = ('ticket_id', 'index')
 
     def __str__(self):
-        return f'{self.ticket_list}: Rule {self.index}'
+        return f'{self.ticket_id}: Rule {self.index}'
 
     def get_protocol_color(self):
         return AccessListRule_Protocol.colors.get(self.protocol)

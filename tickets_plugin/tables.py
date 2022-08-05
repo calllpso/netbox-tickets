@@ -5,7 +5,7 @@ from .models import TicketList, AccessListRule
 
 # pk and actions columns render the checkbox selectors and dropdown menus
 class TicketListTable(NetBoxTable):
-    name = tables.Column(
+    ticket_id = tables.Column(
         linkify=True
     )
     status = ChoiceFieldColumn()
@@ -13,19 +13,18 @@ class TicketListTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = TicketList
-        fields = ('pk', 'id', 'name', 'rule_count', 'status', 'id_directum', 'actions', 'description')
-        default_columns = ('name', 'rule_count', 'status', 'description')
-        name = tables.Column(
+        fields = ('pk', 'id', 'ticket_id', 'rule_count', 'status', 'id_directum', 'actions', 'description', 'comments')
+        default_columns = ('ticket_id', 'rule_count', 'status', 'description')
+        ticket_id = tables.Column(
             linkify=True
         )
         status = ChoiceFieldColumn()
 
 
 class AccessListRuleTable(NetBoxTable):
-    ticket_list = tables.Column(
+    ticket_id = tables.Column(
         linkify=True
     )
-    ticket_id = tables.Column()
     index = tables.Column(
         linkify=True
     )
@@ -35,10 +34,10 @@ class AccessListRuleTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = AccessListRule
         fields = (
-            'pk', 'id', 'ticket_list', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
+            'pk', 'id', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
             'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'actions',
         )
         default_columns = (
-            'ticket_list', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
+            'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
             'destination_ports', 'protocol', 'action', 'opened', 'closed', 'actions',
         )

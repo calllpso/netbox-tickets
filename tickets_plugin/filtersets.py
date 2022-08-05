@@ -10,7 +10,7 @@ class AccessListRuleFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = AccessListRule
-        fields = ('id','ticket_list','ticket_id','index',
+        fields = ('id','ticket_id','index',
             'protocol','action','description',
             'opened','closed', 'source_prefix','destination_prefix'
         ) 
@@ -21,9 +21,7 @@ class TicketListFilterSet(NetBoxModelFilterSet):
     class Meta:
         model = TicketList
 
-        fields = ('id','name','status','id_directum',
+        fields = ('id','ticket_id','status','id_directum',
             'description'
         ) 
 
-
-    

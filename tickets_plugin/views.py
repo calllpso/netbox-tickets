@@ -56,10 +56,3 @@ class AccessListRuleEditView(generic.ObjectEditView):
 
 class AccessListRuleDeleteView(generic.ObjectDeleteView):
     queryset = models.AccessListRule.objects.all()
-
-
-
-
-
-
-

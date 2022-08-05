@@ -8,24 +8,28 @@ from .models import AccessListRule_Action, AccessListRule_Protocol
 
 
 class TicketListForm(NetBoxModelForm):
-    # comments = CommentField() не нужно
+    comments = CommentField()
 
     class Meta:
         model = TicketList
-        fields = ('name', 'status', 'id_directum', 'tags')
+        fields = ('ticket_id', 'status', 'id_directum', 'tags', 'comments')
 
 class AccessListRuleForm(NetBoxModelForm):
     ###из названия ниже берет создает поле в форме создания
-    ticket_list = DynamicModelChoiceField(
+    ticket_id = DynamicModelChoiceField(
         queryset=TicketList.objects.all()
     )
 
     class Meta:
         model = AccessListRule
         fields = (
-            'ticket_list', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
+            'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
             'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'tags',
         )
+        # fields = (
+        #     'ticket_list', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
+        #     'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'tags',
+        # )
 
 
 
@@ -33,7 +37,7 @@ class AccessListRuleFilterForm(NetBoxModelFilterSetForm):
     model = AccessListRule
 
     ###из названия ниже берет создает поле в форме создания
-    ticket_list = forms.ModelMultipleChoiceField(
+    ticket_id = forms.ModelMultipleChoiceField(
         queryset=TicketList.objects.all(),
         required=False
         )
@@ -56,10 +60,6 @@ class AccessListRuleFilterForm(NetBoxModelFilterSetForm):
     )
 
     closed = forms.CharField(
-        required=False
-    )
-
-    ticket_id = forms.IntegerField(
         required=False
     )
 
@@ -93,4 +93,3 @@ class TicketListFilterForm(NetBoxModelFilterSetForm):
         required=False
     )
 
-    # 'status'

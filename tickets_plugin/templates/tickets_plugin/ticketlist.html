@@ -16,7 +16,8 @@
           <table class="table table-hover attr-table">
             <tr>
               <th scope="row">Name</th>
-              <td>{{ object.name }}</td>
+              <td>{{ object.ticket_id }}</td>
+
             </tr>
             <tr>
               <th scope="row">Status</th>
@@ -34,6 +35,7 @@
     </div>
     <div class="col col-md-6">
       {% include 'inc/panels/tags.html' %}
+      {% include 'inc/panels/comments.html' %}
     </div>
   </div>
 

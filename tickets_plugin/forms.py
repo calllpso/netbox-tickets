@@ -1,10 +1,10 @@
 from netbox.forms import NetBoxModelForm
 from utilities.forms.fields import CommentField, DynamicModelChoiceField
-from .models import TicketList, AccessListRule
+from .models import TicketList, Rule
 
 from netbox.forms import NetBoxModelFilterSetForm
 from django import forms
-from .models import AccessListRule_Action, AccessListRule_Protocol
+from .models import Rule_Action, Rule_Protocol
 
 
 class TicketListForm(NetBoxModelForm):
@@ -14,22 +14,24 @@ class TicketListForm(NetBoxModelForm):
         model = TicketList
         fields = ('ticket_id', 'status', 'id_directum', 'tags', 'comments')
 
-class AccessListRuleForm(NetBoxModelForm):
+class RuleForm(NetBoxModelForm):
     ###из названия ниже берет создает поле в форме создания
     ticket_id = DynamicModelChoiceField(
         queryset=TicketList.objects.all()
     )
 
+    
+
     class Meta:
-        model = AccessListRule
+        model = Rule
         fields = (
             'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
             'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'tags',
         )
 
 
-class AccessListRuleFilterForm(NetBoxModelFilterSetForm):
-    model = AccessListRule
+class RuleFilterForm(NetBoxModelFilterSetForm):
+    model = Rule
 
     ###из названия ниже берет создает поле в форме создания
     ticket_id = forms.ModelMultipleChoiceField(
@@ -42,11 +44,11 @@ class AccessListRuleFilterForm(NetBoxModelFilterSetForm):
     )
 
     protocol = forms.MultipleChoiceField(
-        choices=AccessListRule_Protocol,
+        choices=Rule_Protocol,
         required=False
     )
     action = forms.MultipleChoiceField(
-        choices=AccessListRule_Action,
+        choices=Rule_Action,
         required=False
     )
 

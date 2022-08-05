@@ -9,7 +9,7 @@ class TicketListView(generic.ObjectView):
 
     #счетчик rules
     def get_extra_context(self, request, instance):
-        table = tables.AccessListRuleTable(instance.rules.all())
+        table = tables.RuleTable(instance.rules.all())
         table.configure(request)
 
         return {
@@ -38,21 +38,21 @@ class TicketListDeleteView(generic.ObjectDeleteView):
 
 
 #one
-class AccessListRuleView(generic.ObjectView):
-    queryset = models.AccessListRule.objects.all()
+class RuleView(generic.ObjectView):
+    queryset = models.Rule.objects.all()
 
 #many
-class AccessListRuleListView(generic.ObjectListView):
-    queryset = models.AccessListRule.objects.all()
-    table = tables.AccessListRuleTable ###
-    filterset = filtersets.AccessListRuleFilterSet
-    filterset_form = forms.AccessListRuleFilterForm
+class RuleListView(generic.ObjectListView):
+    queryset = models.Rule.objects.all()
+    table = tables.RuleTable ###
+    filterset = filtersets.RuleFilterSet
+    filterset_form = forms.RuleFilterForm
     
 
-class AccessListRuleEditView(generic.ObjectEditView):
-    queryset = models.AccessListRule.objects.all()
-    form = forms.AccessListRuleForm
+class RuleEditView(generic.ObjectEditView):
+    queryset = models.Rule.objects.all()
+    form = forms.RuleForm
 
 
-class AccessListRuleDeleteView(generic.ObjectDeleteView):
-    queryset = models.AccessListRule.objects.all()
+class RuleDeleteView(generic.ObjectDeleteView):
+    queryset = models.Rule.objects.all()

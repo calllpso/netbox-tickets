@@ -1,15 +1,17 @@
 from netbox.filtersets import NetBoxModelFilterSet
-from .models import AccessListRule, TicketList
+from .models import Rule, TicketList
 
 
-from utilities.filters import MultiValueCharFilter
+from utilities.filters import MultiValueCharFilter #,MultipleChoiceFilter
 
-class AccessListRuleFilterSet(NetBoxModelFilterSet):
+class RuleFilterSet(NetBoxModelFilterSet):
     source_prefix = MultiValueCharFilter()
     destination_prefix = MultiValueCharFilter()
 
+    # protocol = MultiValueCharFilter()
+
     class Meta:
-        model = AccessListRule
+        model = Rule
         fields = ('id','ticket_id','index',
             'protocol','action','description',
             'opened','closed', 'source_prefix','destination_prefix'
@@ -17,7 +19,7 @@ class AccessListRuleFilterSet(NetBoxModelFilterSet):
 
 
 class TicketListFilterSet(NetBoxModelFilterSet):
-    id_directum = MultiValueCharFilter()
+    id_directum = MultiValueCharFilter() 
     class Meta:
         model = TicketList
 

@@ -5,6 +5,6 @@ app_name = 'tickets_plugin'
 
 router = NetBoxRouter()
 router.register('ticket-list', views.TicketListViewSet)
-router.register('rules', views.AccessListRuleViewSet)
+router.register('rules', views.RuleViewSet)
 
 urlpatterns = router.urls

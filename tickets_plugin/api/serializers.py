@@ -1,14 +1,10 @@
 from rest_framework import serializers
 
 from netbox.api.serializers import NetBoxModelSerializer
-from ..models import TicketList, AccessListRule
+from ..models import TicketList, Rule
 
 
 from netbox.api.serializers import WritableNestedSerializer
-
-# from ipam.api.nested_serializers import (
-#     NestedPrefixSerializer,
-# )
 
 
 class NestedTicketListSerializer(WritableNestedSerializer):
@@ -23,13 +19,13 @@ class NestedTicketListSerializer(WritableNestedSerializer):
         fields = ('id', 'url', 'display', 'ticket_id')
         # fields = ('id', 'url', 'display', 'name')
 
-class NestedAccessListRuleSerializer(WritableNestedSerializer):
+class NestedRuleSerializer(WritableNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name='plugins-api:tickets_plugin-api:accesslistrule-detail'
+        view_name='plugins-api:tickets_plugin-api:rule-detail'
     )
 
     class Meta:
-        model = AccessListRule
+        model = Rule
         fields = ('id', 'url', 'display', 'index')
 
 
@@ -52,15 +48,15 @@ class TicketListSerializer(NetBoxModelSerializer):
         )
    
 
-class AccessListRuleSerializer(NetBoxModelSerializer):
+class RuleSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name='plugins-api:tickets_plugin-api:accesslistrule-detail'
+        view_name='plugins-api:tickets_plugin-api:rule-detail'
     )
     ticket_id = NestedTicketListSerializer()
 
 
     class Meta:
-        model = AccessListRule
+        model = Rule
         fields = (
             'id', 'url', 'display', 'ticket_id', 'index', 'protocol', 'source_prefix', 'source_ports',
             'destination_prefix', 'destination_ports', 'action', 'tags', 'custom_fields', 'created',

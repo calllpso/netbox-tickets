@@ -1,7 +1,7 @@
 import django_tables2 as tables
 
 from netbox.tables import NetBoxTable, ChoiceFieldColumn
-from .models import TicketList, AccessListRule
+from .models import TicketList, Rule
 
 # pk and actions columns render the checkbox selectors and dropdown menus
 class TicketListTable(NetBoxTable):
@@ -21,7 +21,7 @@ class TicketListTable(NetBoxTable):
         status = ChoiceFieldColumn()
 
 
-class AccessListRuleTable(NetBoxTable):
+class RuleTable(NetBoxTable):
     ticket_id = tables.Column(
         linkify=True
     )
@@ -32,7 +32,7 @@ class AccessListRuleTable(NetBoxTable):
     action = ChoiceFieldColumn()
 
     class Meta(NetBoxTable.Meta):
-        model = AccessListRule
+        model = Rule
         fields = (
             'pk', 'id', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
             'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'actions',

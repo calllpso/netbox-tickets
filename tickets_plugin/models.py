@@ -4,7 +4,10 @@ from django.db import models
 from netbox.models import NetBoxModel
 from django.urls import reverse
 
-from ipam.fields import IPNetworkField, IPAddressField
+from ipam.fields import IPAddressField
+
+###
+# from multiselectfield import MultiSelectField
 
 class TicketList_status(ChoiceSet):
     key = 'TicketList.status'
@@ -14,14 +17,14 @@ class TicketList_status(ChoiceSet):
         ('staged', 'Staged', 'orange'),
     ]
 
-class AccessListRule_Action(ChoiceSet):
-    key = 'AccessListRule.action'
+class Rule_Action(ChoiceSet):
+    key = 'Rule.action'
     CHOICES = [
         ('permit', 'Permit', 'green'),
         ('drop', 'Drop', 'red'),
     ]
 
-class AccessListRule_Protocol(ChoiceSet):
+class Rule_Protocol(ChoiceSet):
     CHOICES = [
         ('ip', 'IP', 'green'),
         ('tcp', 'TCP', 'blue'),
@@ -64,15 +67,13 @@ class TicketList(NetBoxModel):
     def get_absolute_url(self):
         return reverse('plugins:tickets_plugin:ticketlist', args=[self.pk])
 
-class AccessListRule(NetBoxModel):
+class Rule(NetBoxModel):
 
     ticket_id = models.ForeignKey(
         to=TicketList,
         on_delete=models.CASCADE,
         related_name='rules'
     )
-
-
 
     index = models.PositiveIntegerField()
     
@@ -94,12 +95,23 @@ class AccessListRule(NetBoxModel):
     )
     protocol = models.CharField(
         max_length=30,
-        choices=AccessListRule_Protocol,
+        choices=Rule_Protocol,
         blank=True
     )
+
+    # protocol = ArrayField(
+    #     models.CharField(max_length=4, blank=True, choices=Rule_Protocol),
+    #     default=list,
+    #     blank=True,
+    # )
+
+    # protocol = models.MultipleChoiceField(
+    #     choices=Rule_Protocol,
+    #     blank=True
+    # )
     action = models.CharField(
         max_length=30,
-        choices=AccessListRule_Action,
+        choices=Rule_Action,
         blank=True
     )
 
@@ -125,10 +137,10 @@ class AccessListRule(NetBoxModel):
         return f'{self.ticket_id}: Rule {self.index}'
 
     def get_protocol_color(self):
-        return AccessListRule_Protocol.colors.get(self.protocol)
+        return Rule_Protocol.colors.get(self.protocol)
 
     def get_action_color(self):
-        return AccessListRule_Action.colors.get(self.action)
+        return Rule_Action.colors.get(self.action)
 
     def get_absolute_url(self):
-        return reverse('plugins:tickets_plugin:accesslistrule', args=[self.pk])
+        return reverse('plugins:tickets_plugin:rule', args=[self.pk])

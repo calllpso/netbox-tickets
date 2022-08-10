@@ -11,10 +11,13 @@ from ipam.fields import IPAddressField
 
 class TicketList_status(ChoiceSet):
     key = 'TicketList.status'
+    active = 'active'
+    inactive = 'inactive'
+    staged = 'staged'
     CHOICES = [
-        ('active', 'Active', 'green'),
-        ('inactive', 'Inactive', 'red'),
-        ('staged', 'Staged', 'orange'),
+        (active, 'Active', 'green'),
+        (inactive, 'Inactive', 'red'),
+        (staged, 'Staged', 'orange'),
     ]
 
 class Rule_Action(ChoiceSet):
@@ -25,12 +28,18 @@ class Rule_Action(ChoiceSet):
     ]
 
 class Rule_Protocol(ChoiceSet):
-    CHOICES = [
+    # CHOICES = [
+    #     ('ip', 'IP', 'green'),
+    #     ('tcp', 'TCP', 'blue'),
+    #     ('udp', 'UDP', 'orange'),
+    #     ('icmp', 'ICMP', 'purple'),
+    # ]
+    CHOICES = (
         ('ip', 'IP', 'green'),
         ('tcp', 'TCP', 'blue'),
         ('udp', 'UDP', 'orange'),
         ('icmp', 'ICMP', 'purple'),
-    ]
+    )
 
 class TicketList(NetBoxModel):
     ticket_id = models.CharField(
@@ -39,7 +48,8 @@ class TicketList(NetBoxModel):
     status = models.CharField(
         max_length=30,
         choices=TicketList_status,
-        blank=True
+        default=TicketList_status.inactive
+        # blank=True
     )
     id_directum = models.CharField(
         max_length=100,

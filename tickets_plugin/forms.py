@@ -21,7 +21,6 @@ class RuleForm(NetBoxModelForm):
     )
 
     
-
     class Meta:
         model = Rule
         fields = (

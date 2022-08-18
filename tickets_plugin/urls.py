@@ -16,7 +16,6 @@ urlpatterns = (
     #для журнала необходимо добавить WritableNestedSerializer  
     path('ticket-list/<int:pk>/journal/', ObjectJournalView.as_view(), name='ticketlist_journal', kwargs={'model': models.TicketList}),
 
-
     # Access list rules
     path('rules/', views.RuleListView.as_view(), name='rule_list'),
     path('rules/add/', views.RuleEditView.as_view(), name='rule_add'),

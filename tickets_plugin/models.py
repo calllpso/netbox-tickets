@@ -6,8 +6,20 @@ from django.urls import reverse
 
 from ipam.fields import IPAddressField
 
-###
-# from multiselectfield import MultiSelectField
+
+
+from django import forms
+
+class ChoiceArrayField(ArrayField):
+
+    def formfield(self, **kwargs):
+        defaults = {
+            'form_class': forms.MultipleChoiceField,
+            'choices': self.base_field.choices,
+        }
+        defaults.update(kwargs)
+        return super(ArrayField, self).formfield(**defaults)
+
 
 class TicketList_status(ChoiceSet):
     key = 'TicketList.status'
@@ -27,19 +39,14 @@ class Rule_Action(ChoiceSet):
         ('drop', 'Drop', 'red'),
     ]
 
-class Rule_Protocol(ChoiceSet):
-    # CHOICES = [
-    #     ('ip', 'IP', 'green'),
-    #     ('tcp', 'TCP', 'blue'),
-    #     ('udp', 'UDP', 'orange'),
-    #     ('icmp', 'ICMP', 'purple'),
-    # ]
-    CHOICES = (
+class Rule_Protocol(ChoiceSet):  #это должно остаться и для массива выбора
+    key = 'Rule.protocol'
+    CHOICES = [
         ('ip', 'IP', 'green'),
         ('tcp', 'TCP', 'blue'),
         ('udp', 'UDP', 'orange'),
         ('icmp', 'ICMP', 'purple'),
-    )
+    ]
 
 class TicketList(NetBoxModel):
     ticket_id = models.CharField(
@@ -103,22 +110,10 @@ class Rule(NetBoxModel):
         base_field=models.CharField(max_length=50),
         blank=True
     )
-    protocol = models.CharField(
-        max_length=30,
-        choices=Rule_Protocol,
-        blank=True
-    )
 
-    # protocol = ArrayField(
-    #     models.CharField(max_length=4, blank=True, choices=Rule_Protocol),
-    #     default=list,
-    #     blank=True,
-    # )
+    protocol = ChoiceArrayField(models.CharField(max_length=4, choices=Rule_Protocol, blank=True))
 
-    # protocol = models.MultipleChoiceField(
-    #     choices=Rule_Protocol,
-    #     blank=True
-    # )
+
     action = models.CharField(
         max_length=30,
         choices=Rule_Action,
@@ -146,8 +141,8 @@ class Rule(NetBoxModel):
     def __str__(self):
         return f'{self.ticket_id}: Rule {self.index}'
 
-    def get_protocol_color(self):
-        return Rule_Protocol.colors.get(self.protocol)
+    # def get_protocol_color(self):
+    #     return Rule_Protocol.colors.get(self.protocol)
 
     def get_action_color(self):
         return Rule_Action.colors.get(self.action)

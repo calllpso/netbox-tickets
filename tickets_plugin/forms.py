@@ -20,14 +20,12 @@ class RuleForm(NetBoxModelForm):
         queryset=TicketList.objects.all()
     )
 
-    
     class Meta:
         model = Rule
         fields = (
-            'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
-            'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'tags',
+           'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
+           'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'tags',
         )
-
 
 class RuleFilterForm(NetBoxModelFilterSetForm):
     model = Rule
@@ -42,20 +40,13 @@ class RuleFilterForm(NetBoxModelFilterSetForm):
         required=False
     )
 
-    protocol = forms.MultipleChoiceField(
-        choices=Rule_Protocol,
-        required=False
-    )
+    # protocol = forms.MultipleChoiceField(
+    #     choices=Rule_Protocol,
+    #     required=False
+    # )
+   
     action = forms.MultipleChoiceField(
         choices=Rule_Action,
-        required=False
-    )
-
-    opened = forms.CharField(
-        required=False
-    )
-
-    closed = forms.CharField(
         required=False
     )
 
@@ -67,9 +58,16 @@ class RuleFilterForm(NetBoxModelFilterSetForm):
         required=False
     )
 
-    description = forms.CharField(
+    opened = forms.CharField(
         required=False
     )
+
+    closed = forms.CharField(
+        required=False
+    )
+
+   
+
 
 
 
@@ -77,15 +75,13 @@ class RuleFilterForm(NetBoxModelFilterSetForm):
 class TicketListFilterForm(NetBoxModelFilterSetForm):
     model = TicketList
 
-    name = forms.CharField(
+    ticket_id = forms.CharField(
         required=False
     )
-
     id_directum = forms.CharField(
         required=False
     )
-
-    description = forms.CharField(
+    status = forms.CharField(
         required=False
     )
 

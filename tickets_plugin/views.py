@@ -2,7 +2,7 @@ from netbox.views import generic
 from . import forms, models, tables
 from django.db.models import Count
 
-from . import filtersets, forms, models, tables
+from . import forms, models, tables, filtersets
 
 class TicketListView(generic.ObjectView):
     queryset = models.TicketList.objects.all()
@@ -33,9 +33,6 @@ class TicketListEditView(generic.ObjectEditView):
 
 class TicketListDeleteView(generic.ObjectDeleteView):
     queryset = models.TicketList.objects.all()
-
-
-
 
 #one
 class RuleView(generic.ObjectView):

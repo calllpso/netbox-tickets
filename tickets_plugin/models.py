@@ -6,6 +6,7 @@ from django.urls import reverse
 
 from ipam.fields import IPAddressField
 
+from dcim.models import Device
 
 
 from django import forms
@@ -91,6 +92,12 @@ class Rule(NetBoxModel):
         on_delete=models.CASCADE,
         related_name='rules'
     )
+
+    # device_id = models.ForeignKey(
+    #     to=Device,
+    #     on_delete=models.SET_NULL,
+    #     related_name='rules'
+    # )
 
     index = models.PositiveIntegerField()
     

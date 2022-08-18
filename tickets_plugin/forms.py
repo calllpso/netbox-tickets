@@ -1,5 +1,5 @@
 from netbox.forms import NetBoxModelForm
-from utilities.forms.fields import CommentField, DynamicModelChoiceField
+from utilities.forms.fields import CommentField, DynamicModelChoiceField,TagFilterField
 from .models import TicketList, Rule
 
 from netbox.forms import NetBoxModelFilterSetForm
@@ -30,6 +30,7 @@ class RuleForm(NetBoxModelForm):
 class RuleFilterForm(NetBoxModelFilterSetForm):
     model = Rule
 
+    tag = TagFilterField(model)
     ###из названия ниже берет создает поле в форме создания
     ticket_id = forms.ModelMultipleChoiceField(
         queryset=TicketList.objects.all(),
@@ -75,6 +76,8 @@ class RuleFilterForm(NetBoxModelFilterSetForm):
 class TicketListFilterForm(NetBoxModelFilterSetForm):
     model = TicketList
 
+    tag = TagFilterField(model)
+
     ticket_id = forms.CharField(
         required=False
     )
@@ -85,3 +88,4 @@ class TicketListFilterForm(NetBoxModelFilterSetForm):
         required=False
     )
 
+    

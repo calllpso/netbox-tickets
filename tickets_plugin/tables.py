@@ -15,7 +15,7 @@ class TicketListTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = TicketList
         fields = ('pk', 'id', 'ticket_id', 'rule_count', 'status', 'id_directum', 'actions', 'description', 'comments')
-        default_columns = ('ticket_id', 'rule_count', 'status', 'description')
+        default_columns = ('ticket_id', 'id_directum', 'rule_count', 'status', 'description')
         ticket_id = tables.Column(
             linkify=True
         )
@@ -42,9 +42,14 @@ class ChoiceFieldArrayColumn(tables.Column):
 
 
 class RuleTable(NetBoxTable):
+    device = tables.Column(
+        linkify=True
+    )
+
     ticket_id = tables.Column(
         linkify=True
     )
+
     index = tables.Column(
         linkify=True
     )
@@ -55,10 +60,10 @@ class RuleTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = Rule
         fields = (
-            'pk', 'id', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
+            'pk', 'id', 'device', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
             'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'actions',
         )
         default_columns = (
-            'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
+            'device', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
             'destination_ports', 'protocol', 'action', 'opened', 'closed', 'actions',
         )

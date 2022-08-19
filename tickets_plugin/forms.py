@@ -6,6 +6,7 @@ from netbox.forms import NetBoxModelFilterSetForm
 from django import forms
 from .models import Rule_Action, Rule_Protocol
 
+from dcim.models import Device
 
 class TicketListForm(NetBoxModelForm):
     comments = CommentField()
@@ -20,10 +21,14 @@ class RuleForm(NetBoxModelForm):
         queryset=TicketList.objects.all()
     )
 
+    device = DynamicModelChoiceField(
+        queryset=Device.objects.all()
+    )
+
     class Meta:
         model = Rule
         fields = (
-           'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
+           'ticket_id', 'device', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
            'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'tags',
         )
 

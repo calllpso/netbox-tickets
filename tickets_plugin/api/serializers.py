@@ -54,11 +54,12 @@ class RuleSerializer(NetBoxModelSerializer):
     )
     ticket_id = NestedTicketListSerializer()
 
+    # device = NestedTicketListSerializer()
 
     class Meta:
         model = Rule
         fields = (
-            'id', 'url', 'display', 'ticket_id', 'index', 'protocol', 'source_prefix', 'source_ports',
+            'id', 'url', 'display', 'device', 'ticket_id', 'index', 'protocol', 'source_prefix', 'source_ports',
             'destination_prefix', 'destination_ports', 'action', 'tags', 'custom_fields', 'created',
             'last_updated', 'opened', 'closed'
         )

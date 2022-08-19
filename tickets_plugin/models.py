@@ -92,12 +92,8 @@ class Rule(NetBoxModel):
         on_delete=models.CASCADE,
         related_name='rules'
     )
-
-    # device_id = models.ForeignKey(
-    #     to=Device,
-    #     on_delete=models.SET_NULL,
-    #     related_name='rules'
-    # )
+    # blank=True,
+    device = models.ForeignKey(to="dcim.Device", on_delete=models.PROTECT)
 
     index = models.PositiveIntegerField()
     

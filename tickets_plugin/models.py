@@ -87,14 +87,14 @@ class TicketList(NetBoxModel):
         return reverse('plugins:tickets_plugin:ticketlist', args=[self.pk])
 
 class Rule(NetBoxModel):
-
     ticket_id = models.ForeignKey(
         to=TicketList,
         on_delete=models.CASCADE,
         related_name='rules'
         # doesn't work: help_text='select corresponding ticket'
     )
-    device = models.ForeignKey(to="dcim.Device", on_delete=models.PROTECT)
+    device = models.ForeignKey(to="dcim.Device", on_delete=models.SET_NULL, null=True, blank=True)
+    # device = models.ForeignKey(to="dcim.Device", on_delete=models.PROTECT)
 
     index = models.PositiveIntegerField() #!! not blank=True
     

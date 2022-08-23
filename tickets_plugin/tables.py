@@ -21,9 +21,6 @@ class TicketListTable(NetBoxTable):
         )
         status = ChoiceFieldColumn()
 
-        
-
-
 class ChoiceFieldArrayColumn(tables.Column):
     def render(self, value):
         mark_str = ''
@@ -38,24 +35,19 @@ class ChoiceFieldArrayColumn(tables.Column):
     def value(self, value):
         return value
 
-
-
 class RuleTable(NetBoxTable):
     device = tables.Column(
         linkify=True
     )
-
     ticket_id = tables.Column(
         linkify=True
     )
-
     index = tables.Column(
         linkify=True
     )
     protocol = ChoiceFieldArrayColumn()
-    
-    action = ChoiceFieldColumn()
 
+    action = ChoiceFieldColumn()
     class Meta(NetBoxTable.Meta):
         model = Rule
         fields = (

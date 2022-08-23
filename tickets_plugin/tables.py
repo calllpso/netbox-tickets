@@ -25,7 +25,6 @@ class TicketListTable(NetBoxTable):
 
 
 class ChoiceFieldArrayColumn(tables.Column):
-    # def render(self, record, bound_column, value):
     def render(self, value):
         mark_str = ''
         colors = {'ip':'green',

@@ -3,16 +3,26 @@ from .models import Rule, TicketList
 
 from django.db.models import Q
 
-from django_filters import CharFilter
+# from django_filters import CharFilter
 
-from utilities.filters import MultiValueCharFilter
+from utilities.filters import MultiValueCharFilter,MultiValueNumberFilter
 
 class RuleFilterSet(NetBoxModelFilterSet):
+
+    """
+    не фильтрует Ticket id
+    """
+
+
     source_prefix = MultiValueCharFilter()
     destination_prefix =  MultiValueCharFilter()
+
+    device = MultiValueCharFilter()
+    index = MultiValueNumberFilter()
+
     class Meta:
         model = Rule
-        fields = ('ticket_id__ticket_id', 'index', 'source_prefix', 'destination_prefix','closed', 'action', 'opened',
+        fields = ('ticket_id', 'device', 'index', 'source_prefix', 'destination_prefix','closed', 'action', 'opened',
         ) 
 
     def search(self, queryset, name, value):

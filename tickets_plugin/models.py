@@ -11,6 +11,8 @@ from dcim.models import Device
 
 from django import forms
 
+
+
 class ChoiceArrayField(ArrayField):
 
     def formfield(self, **kwargs):
@@ -57,7 +59,6 @@ class TicketList(NetBoxModel):
         max_length=30,
         choices=TicketList_status,
         default=TicketList_status.inactive
-        # blank=True
     )
     id_directum = models.CharField(
         max_length=100,
@@ -91,11 +92,11 @@ class Rule(NetBoxModel):
         to=TicketList,
         on_delete=models.CASCADE,
         related_name='rules'
+        # doesn't work: help_text='select corresponding ticket'
     )
-    # blank=True,
     device = models.ForeignKey(to="dcim.Device", on_delete=models.PROTECT)
 
-    index = models.PositiveIntegerField()
+    index = models.PositiveIntegerField() #!! not blank=True
     
     source_prefix = IPAddressField(
         help_text='IPv4 or IPv6 address (with mask)',
@@ -128,24 +129,26 @@ class Rule(NetBoxModel):
         blank=True
     )
 
-    opened = models.CharField(
-        max_length=30,
-        blank=True
+    opened = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name='Opening date'
     )
-    closed = models.CharField(
-        max_length=30,
-        blank=True
+
+    closed = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name='Closing date'
     )
 
     class Meta:
         ordering = ('ticket_id', 'index')
         unique_together = ('ticket_id', 'index')
 
+       
+
     def __str__(self):
         return f'{self.ticket_id}: Rule {self.index}'
-
-    # def get_protocol_color(self):
-    #     return Rule_Protocol.colors.get(self.protocol)
 
     def get_action_color(self):
         return Rule_Action.colors.get(self.action)

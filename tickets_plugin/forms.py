@@ -1,5 +1,6 @@
+import imp
 from netbox.forms import NetBoxModelForm
-from utilities.forms.fields import CommentField, DynamicModelChoiceField,TagFilterField
+from utilities.forms.fields import CommentField, DynamicModelChoiceField,TagFilterField, DynamicModelMultipleChoiceField
 from .models import TicketList, Rule
 
 from netbox.forms import NetBoxModelFilterSetForm
@@ -7,6 +8,14 @@ from django import forms
 from .models import Rule_Action, Rule_Protocol
 
 from dcim.models import Device
+
+from utilities.forms import DatePicker
+
+
+# from dcim.forms import DeviceFilterForm
+from django.forms.widgets import  SelectMultiple #, StaticSelectMultiple
+from utilities.forms import widgets
+from django.forms.widgets import Select as sel
 
 class TicketListForm(NetBoxModelForm):
     comments = CommentField()
@@ -32,43 +41,69 @@ class RuleForm(NetBoxModelForm):
            'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'tags',
         )
 
+        widgets = {
+            'opened': DatePicker(),
+            'closed': DatePicker()
+        }
+
+
 class RuleFilterForm(NetBoxModelFilterSetForm):
     model = Rule
 
     tag = TagFilterField(model)
-    ###из названия ниже берет создает поле в форме создания
-    ticket_id = forms.ModelMultipleChoiceField(
-        queryset=TicketList.objects.all(),
-        required=False
-        )
 
-    index = forms.IntegerField(
+    ticket_id = DynamicModelChoiceField(
+        queryset=TicketList.objects.all(),
         required=False
     )
 
-    # protocol = forms.MultipleChoiceField(
-    #     choices=Rule_Protocol,
-    #     required=False
-    # )
-   
+    device = DynamicModelMultipleChoiceField(
+        queryset=Device.objects.all(),
+        required=False
+    ) 
+
+    index = forms.ModelMultipleChoiceField(
+        widget = widgets.StaticSelectMultiple, 
+        queryset=Rule.objects.values_list('index', flat =True),
+        required=False
+        )
+    
     action = forms.MultipleChoiceField(
         choices=Rule_Action,
         required=False
     )
+    # action = forms.ChoiceField(
+    #     widget = sel,
+    #     # widget = widgets.StaticSelect,
+    #     choices=Rule_Action,
+    #     required=False
+    # )
 
-    source_prefix = forms.GenericIPAddressField(
+    # source_prefix = forms.GenericIPAddressField(
+    # source_prefix = forms.ModelMultipleChoiceField(
+    source_prefix = forms.ModelChoiceField(
+        #если делать multi, то поле фильтра всегда активно, даже, если ничего в нем нет
+        # widget = widgets.StaticSelectMultiple, 
+        widget = widgets.StaticSelect, 
+        queryset=Rule.objects.values_list('source_prefix', flat =True).exclude(source_prefix=None),
+        required=False
+    )
+    destination_prefix = forms.ModelChoiceField(
+        widget = widgets.StaticSelect,
+        queryset=Rule.objects.values_list('destination_prefix', flat =True).exclude(destination_prefix=None),
         required=False
     )
 
-    destination_prefix = forms.GenericIPAddressField(
+    opened = forms.ModelMultipleChoiceField(
+        # widget=DatePicker,
+        widget = widgets.StaticSelectMultiple,
+        queryset=Rule.objects.values_list('opened', flat =True).exclude(opened=None),
         required=False
     )
 
-    opened = forms.CharField(
-        required=False
-    )
-
-    closed = forms.CharField(
+    closed = forms.ModelMultipleChoiceField(
+        widget = widgets.StaticSelectMultiple,
+        queryset=Rule.objects.values_list('closed', flat =True).exclude(closed=None),
         required=False
     )
 

@@ -33,11 +33,12 @@ class RuleFilterSet(NetBoxModelFilterSet):
 
 
 class TicketListFilterSet(NetBoxModelFilterSet):
+    status =  MultiValueCharFilter()
     class Meta:
         model = TicketList
-        fields = ('ticket_id','id_directum')
+        fields = ('ticket_id','id_directum', 'status')
     def search(self, queryset, name, value):
-        qs_filter = Q(ticket_id__contains=value) | Q(id_directum__contains=value)
+        qs_filter = Q(ticket_id__contains=value) | Q(id_directum__contains=value) | Q(status__contains=value)
         return queryset.filter(qs_filter)
 
 

@@ -5,7 +5,7 @@ from .models import TicketList, Rule
 
 from netbox.forms import NetBoxModelFilterSetForm
 from django import forms
-from .models import Rule_Action, Rule_Protocol
+from .models import Rule_Action, Rule_Protocol,TicketList_status
 
 from dcim.models import Device
 
@@ -118,14 +118,35 @@ class TicketListFilterForm(NetBoxModelFilterSetForm):
 
     tag = TagFilterField(model)
 
-    ticket_id = forms.CharField(
-        required=False
-    )
-    id_directum = forms.CharField(
-        required=False
-    )
-    status = forms.CharField(
-        required=False
-    )
 
-    
+
+    ticket_id = forms.ModelMultipleChoiceField(
+        widget = widgets.StaticSelectMultiple, 
+        queryset=TicketList.objects.values_list('ticket_id', flat =True),
+        required=False
+        )
+
+
+    # ticket_id = forms.CharField(
+    #     required=False
+    # )
+
+    id_directum = forms.ModelMultipleChoiceField(
+        widget = widgets.StaticSelectMultiple, 
+        queryset=TicketList.objects.values_list('id_directum', flat =True),
+        required=False
+        )
+
+    # id_directum = forms.CharField(
+    #     required=False
+    # )
+
+
+    # status = forms.CharField(
+    #     required=False
+    # )
+
+    status = forms.MultipleChoiceField(
+        choices=TicketList_status,
+        required=False
+    )

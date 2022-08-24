@@ -1,21 +1,21 @@
 from netbox.forms import NetBoxModelForm,NetBoxModelFilterSetForm
 from utilities.forms.fields import CommentField, DynamicModelChoiceField,TagFilterField, DynamicModelMultipleChoiceField
 from utilities.forms import DatePicker,widgets
-from .models import TicketList, Rule, Rule_Action, TicketList_status,Rule_Protocol
+from .models import Ticket, Rule, Rule_Action, Ticket_status,Rule_Protocol
 from django import forms
 from dcim.models import Device
 from ipam.models import Prefix
 
-class TicketListForm(NetBoxModelForm):
+class TicketForm(NetBoxModelForm):
     comments = CommentField()
     class Meta:
-        model = TicketList
+        model = Ticket
         fields = ('ticket_id', 'status', 'id_directum', 'tags', 'comments')
 
 class RuleForm(NetBoxModelForm):
     ###из названия ниже берет создает поле в форме создания
     ticket_id = DynamicModelChoiceField(
-        queryset=TicketList.objects.all()
+        queryset=Ticket.objects.all()
     )
     device = DynamicModelChoiceField(
         queryset=Device.objects.all(),
@@ -61,7 +61,7 @@ class RuleFilterForm(NetBoxModelFilterSetForm):
     model = Rule
     tag = TagFilterField(model)
     ticket_id = DynamicModelChoiceField(
-        queryset=TicketList.objects.all(),
+        queryset=Ticket.objects.all(),
         required=False
     )
 
@@ -113,22 +113,22 @@ class RuleFilterForm(NetBoxModelFilterSetForm):
         required=False
     )
 
-class TicketListFilterForm(NetBoxModelFilterSetForm):
-    model = TicketList
+class TicketFilterForm(NetBoxModelFilterSetForm):
+    model = Ticket
     tag = TagFilterField(model)
     ticket_id = forms.ModelMultipleChoiceField(
         widget = widgets.StaticSelectMultiple, 
-        queryset=TicketList.objects.values_list('ticket_id', flat =True),
+        queryset=Ticket.objects.values_list('ticket_id', flat =True),
         required=False
         )
 
     id_directum = forms.ModelMultipleChoiceField(
         widget = widgets.StaticSelectMultiple, 
-        queryset=TicketList.objects.values_list('id_directum', flat =True),
+        queryset=Ticket.objects.values_list('id_directum', flat =True),
         required=False
         )
 
     status = forms.MultipleChoiceField(
-        choices=TicketList_status,
+        choices=Ticket_status,
         required=False
     )

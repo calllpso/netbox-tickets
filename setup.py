@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name='tickets_plugin',
+    name='ticket_firewall',
     version='0.1',
     description='An example NetBox plugin',
     install_requires=[],

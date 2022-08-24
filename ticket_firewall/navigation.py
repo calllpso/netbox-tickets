@@ -6,7 +6,7 @@ from extras.plugins import PluginMenuItem, PluginMenuButton
 
 ticketlist_buttons = [
     PluginMenuButton(
-        link='plugins:tickets_plugin:ticketlist_add',
+        link='plugins:ticket_firewall:ticket_add',
         title='Add',
         icon_class='mdi mdi-plus-thick',
         color=ButtonColorChoices.GREEN
@@ -15,12 +15,12 @@ ticketlist_buttons = [
 
 menu_items = (
     PluginMenuItem(
-        link='plugins:tickets_plugin:ticketlist_list',
+        link='plugins:ticket_firewall:ticket_list',
         link_text='Tickets',
         buttons=ticketlist_buttons
     ),
     PluginMenuItem(
-        link='plugins:tickets_plugin:rule_list',
+        link='plugins:ticket_firewall:rule_list',
         link_text='Ticket Rules',
     ),
 )

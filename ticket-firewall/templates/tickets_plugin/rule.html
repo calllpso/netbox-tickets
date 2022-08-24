@@ -1,0 +1,87 @@
+<!--  -->
+<!--  -->
+<!--  -->
+{% extends 'generic/object.html' %}
+
+{% block content %}
+  <div class="row mb-3">
+    <div class="col col-md-6">
+      <div class="card">
+        <h5 class="card-header">Access List Rule</h5>
+        <div class="card-body">
+          <table class="table table-hover attr-table">
+            
+            <tr>
+              <th scope="row">Device</th>
+              <td>
+                <a href="{{ object.device.get_absolute_url }}">{{ object.device }}</a>
+              </td>
+            </tr>
+
+            <tr>
+              <th scope="row">Ticket ID</th>
+              <td>
+                <a href="{{ object.ticket_id.get_absolute_url }}">{{ object.ticket_id }}</a>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Index</th>
+              <td>{{ object.index }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Description</th>
+              <td>{{ object.description|placeholder }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      {% include 'inc/panels/custom_fields.html' %}
+      {% include 'inc/panels/tags.html' %}
+    </div>
+    <div class="col col-md-6">
+      <div class="card">
+        <h5 class="card-header">Details</h5>
+        <div class="card-body">
+          <table class="table table-hover attr-table">
+            <tr>
+              <th scope="row">Protocol</th>
+              <td> {{ object.protocol|join:", "|placeholder }} </td>
+            </tr>
+            <tr>
+              <th scope="row">Source Prefix</th>
+              <td>
+                {% if object.source_prefix %}
+                  <a href="{{ object.source_prefix.get_absolute_url }}">{{ object.source_prefix }}</a>
+                {% else %}
+                  {{ ''|placeholder }}
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Source Ports</th>
+              <td>{{ object.source_ports|join:", "|placeholder }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Destination Prefix</th>
+              <td>
+                {% if object.destination_prefix %}
+                  <a href="{{ object.destination_prefix.get_absolute_url }}">{{ object.destination_prefix }}</a>
+                {% else %}
+                  {{ ''|placeholder }}
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Destination Ports</th>
+              <td>{{ object.destination_ports|join:", "|placeholder }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Action</th>
+              <td>{{ object.get_action_display }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

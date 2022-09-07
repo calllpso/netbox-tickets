@@ -5,12 +5,13 @@ from .models import Ticket, Rule, Rule_Action, Ticket_status,Rule_Protocol
 from django import forms
 from dcim.models import Device
 from ipam.models import Prefix
+from django.db.models import Max
 
 class TicketForm(NetBoxModelForm):
     comments = CommentField()
     class Meta:
         model = Ticket
-        fields = ('ticket_id', 'status', 'id_directum', 'tags', 'comments')
+        fields = ('ticket_id', 'status', 'id_directum', 'tags', 'description', 'comments')
 
 class RuleForm(NetBoxModelForm):
     ###из названия ниже берет создает поле в форме создания
@@ -26,24 +27,30 @@ class RuleForm(NetBoxModelForm):
         required=False
     )
     
-    #!!!!!!!
     protocol = forms.MultipleChoiceField(
+        widget = widgets.StaticSelectMultiple, 
         choices=Rule_Protocol,
         required=False
     )
-    #нужно всегда задавать: это ж ссылка из тикета 
+    #нужно index д.б. всегда required=True: это ж ссылка из тикета 
     # index = forms.CharField(
     #     required=False
     # )
-    
-    # queryset_model_prefix=Prefix.objects.values_list('prefix', flat =True).exclude(prefix=None)
-    # queryset_source_prefix=Rule.objects.values_list('source_prefix', flat =True).exclude(source_prefix=None)
-    # queryset = queryset_model_prefix.union(queryset_source_prefix),    
-    # source_prefix = forms.ModelChoiceField(
-    #     widget = widgets.StaticSelect, 
-    #     queryset = queryset_model_prefix.union(queryset_source_prefix),
-    #     required=False
-    # )
+
+
+    def __init__(self, *args, **kwargs):
+        super(RuleForm,self).__init__(*args, **kwargs)
+        if 'ticket_id' in kwargs:
+            ticket_id = kwargs.pop('ticket_id')
+            self.fields['ticket_id'].initial = ticket_id
+
+        try:
+            max_index=Rule.objects.filter().aggregate(max_index=Max('index'))
+            index = max_index['max_index'] + 1
+            self.initial['index'] = index
+        except:
+            pass
+
 
     class Meta:
         model = Rule
@@ -76,8 +83,9 @@ class RuleFilterForm(NetBoxModelFilterSetForm):
         required=False
     )
     
-    action = forms.MultipleChoiceField(
+    action = forms.ChoiceField(
         choices=Rule_Action,
+        widget = widgets.StaticSelect,
         required=False
     )
     
@@ -90,11 +98,6 @@ class RuleFilterForm(NetBoxModelFilterSetForm):
         queryset = Rule.objects.values_list('source_prefix', flat =True).exclude(source_prefix=None),
         required=False
     )
-    # source_prefix = forms.ModelChoiceField(
-    #     widget = widgets.StaticSelect, 
-    #     queryset=Rule.objects.values_list('source_prefix', flat =True).exclude(source_prefix=None),
-    #     required=False
-    # )
     destination_prefix = forms.ModelChoiceField(
         widget = widgets.StaticSelect,
         queryset=Rule.objects.values_list('destination_prefix', flat =True).exclude(destination_prefix=None),
@@ -127,8 +130,11 @@ class TicketFilterForm(NetBoxModelFilterSetForm):
         queryset=Ticket.objects.values_list('id_directum', flat =True),
         required=False
         )
-
+        
     status = forms.MultipleChoiceField(
+        widget = widgets.StaticSelectMultiple, 
         choices=Ticket_status,
         required=False
     )
+
+   

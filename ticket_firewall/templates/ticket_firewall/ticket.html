@@ -13,17 +13,28 @@
             <tr>
               <th scope="row">Name</th>
               <td>{{ object.ticket_id }}</td>
-
             </tr>
+
             <tr>
               <th scope="row">Status</th>
               <td>{{ object.status }}</td>
             </tr>
 
             <tr>
+              <th scope="row">Description</th>
+              <td>{{ object.description }}</td>
+            </tr>
+            
+            <tr>
+              <th scope="row">ID directum</th>
+              <td>{{ object.id_directum }}</td>
+            </tr>
+
+            <tr>
               <th scope="row">Rules</th>
               <td>{{ object.rules.count }}</td>
             </tr>
+
           </table>
         </div>
       </div>
@@ -39,7 +50,7 @@
     <div class="col col-md-12">
       <div class="card">
         <h5 class="card-header">Rules 
-          <a href="/plugins/tickets-plug/rules/add/" type="button" class="btn btn-sm btn-success">
+          <a href="/plugins/ticket-firewall/rules/add/?ticket_id={{object.id}}" type="button" class="btn btn-sm btn-success">
             <i class="mdi mdi-plus-thick"></i> Add
           </a>
         </h5>
@@ -50,3 +61,5 @@
     </div>
   </div>
 {% endblock content %}
+
+<!-- <a href="/plugins/ticket-firewall/rules/add/" type="button" class="btn btn-sm btn-success"> -->

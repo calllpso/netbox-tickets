@@ -3,18 +3,12 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from netbox.models import NetBoxModel
 from django.urls import reverse
-
 from ipam.fields import IPAddressField
-
 from dcim.models import Device
-
-
 from django import forms
 
 
-
 class ChoiceArrayField(ArrayField):
-
     def formfield(self, **kwargs):
         defaults = {
             'form_class': forms.MultipleChoiceField,
@@ -38,6 +32,7 @@ class Ticket_status(ChoiceSet):
 class Rule_Action(ChoiceSet):
     key = 'Rule.action'
     CHOICES = [
+        ('', '----', 'white'),
         ('permit', 'Permit', 'green'),
         ('drop', 'Drop', 'red'),
     ]
@@ -103,6 +98,7 @@ class Rule(NetBoxModel):
         blank=True, null=True, default=None
     )
     source_ports = ArrayField(
+        help_text='Left field blank for ANY ports',
         base_field=models.CharField(max_length=50),
         blank=True
     )

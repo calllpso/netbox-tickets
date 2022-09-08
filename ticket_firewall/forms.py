@@ -7,11 +7,15 @@ from dcim.models import Device
 from ipam.models import Prefix
 from django.db.models import Max
 
+
+
 class TicketForm(NetBoxModelForm):
+    file = forms.FileField()
+
     comments = CommentField()
     class Meta:
         model = Ticket
-        fields = ('ticket_id', 'status', 'id_directum', 'tags', 'description', 'comments')
+        fields = ('ticket_id', 'status', 'id_directum', 'tags', 'description', 'comments','file')
 
 class RuleForm(NetBoxModelForm):
     ###из названия ниже берет создает поле в форме создания

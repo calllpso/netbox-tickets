@@ -46,7 +46,15 @@ class Rule_Protocol(ChoiceSet):  #это должно остаться и для
         ('icmp', 'ICMP', 'purple'),
     ]
 
+
+
+from django.core.files.storage import FileSystemStorage
+fs = FileSystemStorage(location='./static')
+
 class Ticket(NetBoxModel):
+    
+    file = models.FileField(storage=fs) #############
+
     ticket_id = models.CharField(
         max_length=100,
         unique=True

@@ -47,14 +47,108 @@ class Rule_Protocol(ChoiceSet):  #это должно остаться и для
     ]
 
 
+# from netbox.models.features import WebhooksMixin
+# from netbox.models import ChangeLoggedModel
+# from django.contrib.contenttypes.fields import GenericForeignKey
+# from django.contrib.contenttypes.models import ContentType
+# from utilities.querysets import RestrictedQuerySet
 
-from django.core.files.storage import FileSystemStorage
-fs = FileSystemStorage(location='./static')
+
+
+# def file_upload(instance, filename):
+#     """
+#     Return a path for uploading image attchments.
+#     """
+#     path = 'static/'
+
+#     # Rename the file to the provided name, if any. Attempt to preserve the file extension.
+#     # extension = filename.rsplit('.')[-1].lower()
+#     # if instance.name and extension in ['bmp', 'gif', 'jpeg', 'jpg', 'png']:
+#     #     filename = '.'.join([instance.name, extension])
+#     # elif instance.name:
+#     filename = instance.name
+
+#     return '{}{}_{}_{}'.format(path, instance.content_type.name, instance.object_id, filename)
+
+
+
+# class FileAttachment(WebhooksMixin, ChangeLoggedModel):
+#     """
+#     An uploaded image which is associated with an object.
+#     """
+#     content_type = models.ForeignKey(
+#         to=ContentType,
+#         on_delete=models.CASCADE
+#     )
+#     object_id = models.PositiveBigIntegerField()
+#     parent = GenericForeignKey(
+#         ct_field='content_type',
+#         fk_field='object_id'
+#     )
+#     file = models.FileField(
+#         upload_to=file_upload,
+#     )
+#     name = models.CharField(
+#         max_length=50,
+#         blank=True
+#     )
+
+#     objects = RestrictedQuerySet.as_manager()
+
+#     clone_fields = ('content_type', 'object_id')
+
+#     class Meta:
+#         ordering = ('name', 'pk')  # name may be non-unique
+
+#     def __str__(self):
+#         if self.name:
+#             return self.name
+#         filename = self.file.name.rsplit('/', 1)[-1]
+#         return filename.split('_', 2)[2]
+
+#     def delete(self, *args, **kwargs):
+
+#         _name = self.file.name
+
+#         super().delete(*args, **kwargs)
+
+#         # Delete file from disk
+#         self.file.delete(save=False)
+
+#         # Deleting the file erases its name. We restore the image's filename here in case we still need to reference it
+#         # before the request finishes. (For example, to display a message indicating the ImageAttachment was deleted.)
+#         self.file.name = _name
+
+#     @property
+#     def size(self):
+#         """
+#         Wrapper around `image.size` to suppress an OSError in case the file is inaccessible. Also opportunistically
+#         catch other exceptions that we know other storage back-ends to throw.
+#         """
+#         expected_exceptions = [OSError]
+
+#         try:
+#             from botocore.exceptions import ClientError
+#             expected_exceptions.append(ClientError)
+#         except ImportError:
+#             pass
+
+#         try:
+#             return self.file.size
+#         except tuple(expected_exceptions):
+#             return None
+
+#     def to_objectchange(self, action):
+#         objectchange = super().to_objectchange(action)
+#         objectchange.related_object = self.parent
+#         return objectchange
+
+
+
+
+
 
 class Ticket(NetBoxModel):
-    
-    file = models.FileField(storage=fs) #############
-
     ticket_id = models.CharField(
         max_length=100,
         unique=True
@@ -89,6 +183,24 @@ class Ticket(NetBoxModel):
     
     def get_absolute_url(self):
         return reverse('plugins:ticket_firewall:ticket', args=[self.pk])
+
+
+from django.core.files.storage import FileSystemStorage
+fs = FileSystemStorage(location='./static')
+
+class AttachFile(NetBoxModel):
+    ticket_id = models.ForeignKey(
+        to=Ticket,
+        on_delete=models.CASCADE,
+        related_name='file'
+    )
+    file = models.FileField(storage=fs) 
+    class Meta:
+        ordering = ('ticket_id',)
+        unique_together = ('ticket_id',)
+
+
+
 
 class Rule(NetBoxModel):
     ticket_id = models.ForeignKey(

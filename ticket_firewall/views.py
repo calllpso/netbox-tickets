@@ -1,8 +1,12 @@
 from netbox.views import generic
 from . import forms, models, tables
 from django.db.models import Count
-
 from . import forms, models, tables, filtersets
+
+class AttachFileEditView(generic.ObjectEditView):
+    queryset = models.AttachFile.objects.all()
+    form = forms.AttachFileForm
+
 
 class TicketView(generic.ObjectView):
     queryset = models.Ticket.objects.all()

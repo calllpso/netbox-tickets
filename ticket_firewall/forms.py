@@ -1,21 +1,39 @@
 from netbox.forms import NetBoxModelForm,NetBoxModelFilterSetForm
 from utilities.forms.fields import CommentField, DynamicModelChoiceField,TagFilterField, DynamicModelMultipleChoiceField
 from utilities.forms import DatePicker,widgets
-from .models import Ticket, Rule, Rule_Action, Ticket_status,Rule_Protocol
+from .models import Ticket, Rule, Rule_Action, Ticket_status,Rule_Protocol, AttachFile
 from django import forms
 from dcim.models import Device
 from ipam.models import Prefix
 from django.db.models import Max
 
 
+class AttachFileForm(NetBoxModelForm):
+    file = forms.FileField()
+    ticket_id = DynamicModelChoiceField(
+        queryset=Ticket.objects.all()
+    )
+    # def __init__(self, *args, **kwargs):
+    #     super(AttachFile,self).__init__(*args, **kwargs)
+
+        # ticket_id = kwargs.pop('ticket_id')
+        # self.fields['ticket_id'].initial = ticket_id
+
+
+    class Meta:
+        model = AttachFile
+        fields = ('file',)
+
+
 
 class TicketForm(NetBoxModelForm):
-    file = forms.FileField()
+    # file = AttachFileForm()
+    # file = forms.FileField()
 
     comments = CommentField()
     class Meta:
         model = Ticket
-        fields = ('ticket_id', 'status', 'id_directum', 'tags', 'description', 'comments','file')
+        fields = ('ticket_id', 'status', 'id_directum', 'tags', 'description', 'comments')
 
 class RuleForm(NetBoxModelForm):
     ###из названия ниже берет создает поле в форме создания

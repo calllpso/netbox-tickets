@@ -13,22 +13,23 @@ class AttachFileForm(NetBoxModelForm):
     ticket_id = DynamicModelChoiceField(
         queryset=Ticket.objects.all()
     )
-    # def __init__(self, *args, **kwargs):
-    #     super(AttachFile,self).__init__(*args, **kwargs)
-
-        # ticket_id = kwargs.pop('ticket_id')
+    def __init__(self, *args, **kwargs):
+        super(AttachFileForm,self).__init__(*args, **kwargs)
+        # ticket_id = kwargs['data']['ticket_id']
         # self.fields['ticket_id'].initial = ticket_id
+        # # self.initial['ticket_id'] = ticket_id
+
+        if 'ticket_id' in kwargs:
+            ticket_id = kwargs.pop('ticket_id')
+            self.fields['ticket_id'].initial = ticket_id
 
 
     class Meta:
         model = AttachFile
-        fields = ('file',)
-
+        fields = ('ticket_id','file',)
 
 
 class TicketForm(NetBoxModelForm):
-    # file = AttachFileForm()
-    # file = forms.FileField()
 
     comments = CommentField()
     class Meta:

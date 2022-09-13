@@ -16,7 +16,11 @@ class TicketView(generic.ObjectView):
         table = tables.RuleTable(instance.rules.all())
         table.configure(request)
 
+        # files = models.AttachFile.objects.all()
+        # print('dir________',dir(files))
+
         return {
+            # 'files':    files,
             'rules_table': table,
         }
 

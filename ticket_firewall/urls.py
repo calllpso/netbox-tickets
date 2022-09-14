@@ -29,4 +29,6 @@ urlpatterns = (
 
 
     path('attachfile/add/', views.AttachFileEditView.as_view(), name='attachfile_add'),
+    path('attachfile/<int:pk>/edit/', views.AttachFileEditView.as_view(), name='attachfile_edit'),
+    path('attachfile/<int:pk>/delete/', views.AttachFileDeleteView.as_view(), name='attachfile_delete'),
 )

@@ -49,20 +49,53 @@
         <h5 class="card-header">
           Files
         </h5>
-        <div class="card-body">
-              <table class="table table-hover">
-                <tbody>
-                  <tr>
-                    <th>Name</th>
-                  </tr>
-                  <tr>
-                    <td>
-                      <!-- <a class="image-preview" href="/static/{{ object.file }}" target="_blank" data-bs-original-title="" title="">{{ object.file.file }}</a> -->
-                      <div>files</div>
-                    </td>
-                  </tr>
-              </tbody></table>
-        </div>
+
+          <div class="card-body">
+          <table class="table table-hover">
+            <tbody><tr>
+              <th>Name</th>
+              <th>Created</th>
+              <th></th>
+            </tr>
+            {% for i in files %}
+              <tr>
+                <td>
+                  <i class="mdi mdi-file-image-outline"></i>
+                  <a class="image-preview" href="/static/{{ i.file }}" target="_blank" data-bs-original-title="" title="">{{ i.file }}</a>
+                </td>
+                <td><span title="{{i.created}}">{{i.created}}</span></td>
+                <td class="text-end noprint">
+                  
+                    <a href="/plugins/ticket-firewall/attachfile/{{ i.id }}/edit/" class="btn btn-warning btn-sm lh-1" title="Edit Image">
+                      <i class="mdi mdi-pencil" aria-hidden="true"></i>
+                    </a>
+                  
+                  
+                    <a href="/plugins/ticket-firewall/attachfile/{{ i.id }}/delete/" class="btn btn-danger btn-sm lh-1" title="Delete Image">
+                      <i class="mdi mdi-trash-can-outline" aria-hidden="true"></i>
+                    </a> 
+                  
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody></table>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <div class="card-footer text-end noprint">
           <a href="/plugins/ticket-firewall/attachfile/add/?ticket_id={{object.id}}" class="btn btn-primary btn-sm">

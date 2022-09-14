@@ -195,9 +195,9 @@ class AttachFile(NetBoxModel):
         related_name='file'
     )
     file = models.FileField(storage=fs) 
-    class Meta:
-        ordering = ('ticket_id',)
-        unique_together = ('ticket_id',)
+    # class Meta:
+    #     ordering = ('ticket_id',)
+    #     unique_together = ('ticket_id',)
 
 
 

@@ -7,6 +7,8 @@ class AttachFileEditView(generic.ObjectEditView):
     queryset = models.AttachFile.objects.all()
     form = forms.AttachFileForm
 
+class AttachFileDeleteView(generic.ObjectDeleteView):
+    queryset = models.AttachFile.objects.all()
 
 class TicketView(generic.ObjectView):
     queryset = models.Ticket.objects.all()
@@ -16,11 +18,10 @@ class TicketView(generic.ObjectView):
         table = tables.RuleTable(instance.rules.all())
         table.configure(request)
 
-        # files = models.AttachFile.objects.all()
-        # print('dir________',dir(files))
+        files = models.AttachFile.objects.all()
 
         return {
-            # 'files':    files,
+            'files':    files,
             'rules_table': table,
         }
 

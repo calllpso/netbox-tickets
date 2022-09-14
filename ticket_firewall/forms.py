@@ -15,9 +15,7 @@ class AttachFileForm(NetBoxModelForm):
     )
     def __init__(self, *args, **kwargs):
         super(AttachFileForm,self).__init__(*args, **kwargs)
-        # ticket_id = kwargs['data']['ticket_id']
-        # self.fields['ticket_id'].initial = ticket_id
-        # # self.initial['ticket_id'] = ticket_id
+
 
         if 'ticket_id' in kwargs:
             ticket_id = kwargs.pop('ticket_id')

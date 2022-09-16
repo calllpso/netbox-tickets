@@ -45,9 +45,7 @@ class TicketSerializer(NetBoxModelSerializer):
         )
 
 class AttachFileSerializer(NetBoxModelSerializer):
-    # url = serializers.HyperlinkedIdentityField(
-    #     view_name='plugins-api:ticket_firewall-api:attachfile-detail'
-    # )
+
     ticket_id = NestedTicketSerializer()
     class Meta:
         model = AttachFile

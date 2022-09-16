@@ -53,7 +53,7 @@ class RuleForm(NetBoxModelForm):
         choices=Rule_Protocol,
         required=False
     )
-    #нужно index д.б. всегда required=True: это ж ссылка из тикета 
+    #то что ниже не делай! index должен быть всегда required=True: это ж ссылка из тикета 
     # index = forms.CharField(
     #     required=False
     # )

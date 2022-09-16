@@ -54,24 +54,6 @@ class Rule_Protocol(ChoiceSet):  #это должно остаться и для
 # from utilities.querysets import RestrictedQuerySet
 
 
-
-# def file_upload(instance, filename):
-#     """
-#     Return a path for uploading image attchments.
-#     """
-#     path = 'static/'
-
-#     # Rename the file to the provided name, if any. Attempt to preserve the file extension.
-#     # extension = filename.rsplit('.')[-1].lower()
-#     # if instance.name and extension in ['bmp', 'gif', 'jpeg', 'jpg', 'png']:
-#     #     filename = '.'.join([instance.name, extension])
-#     # elif instance.name:
-#     filename = instance.name
-
-#     return '{}{}_{}_{}'.format(path, instance.content_type.name, instance.object_id, filename)
-
-
-
 # class FileAttachment(WebhooksMixin, ChangeLoggedModel):
 #     """
 #     An uploaded image which is associated with an object.
@@ -93,31 +75,12 @@ class Rule_Protocol(ChoiceSet):  #это должно остаться и для
 #         blank=True
 #     )
 
-#     objects = RestrictedQuerySet.as_manager()
-
-#     clone_fields = ('content_type', 'object_id')
-
-#     class Meta:
-#         ordering = ('name', 'pk')  # name may be non-unique
 
 #     def __str__(self):
 #         if self.name:
 #             return self.name
 #         filename = self.file.name.rsplit('/', 1)[-1]
 #         return filename.split('_', 2)[2]
-
-#     def delete(self, *args, **kwargs):
-
-#         _name = self.file.name
-
-#         super().delete(*args, **kwargs)
-
-#         # Delete file from disk
-#         self.file.delete(save=False)
-
-#         # Deleting the file erases its name. We restore the image's filename here in case we still need to reference it
-#         # before the request finishes. (For example, to display a message indicating the ImageAttachment was deleted.)
-#         self.file.name = _name
 
 #     @property
 #     def size(self):
@@ -137,12 +100,6 @@ class Rule_Protocol(ChoiceSet):  #это должно остаться и для
 #             return self.file.size
 #         except tuple(expected_exceptions):
 #             return None
-
-#     def to_objectchange(self, action):
-#         objectchange = super().to_objectchange(action)
-#         objectchange.related_object = self.parent
-#         return objectchange
-
 
 
 

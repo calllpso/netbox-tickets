@@ -103,15 +103,21 @@ class RuleFilterForm(NetBoxModelFilterSetForm):
         required=False
     )
     
+
+
+
+
+    # Ниже надо включить !!!!!!!
+    #  
     action = forms.ChoiceField(
         choices=Rule_Action,
         widget = widgets.StaticSelect,
         required=False
     )
     
-    queryset_model_prefix=Prefix.objects.values_list('prefix', flat =True).exclude(prefix=None)
-    queryset_source_prefix=Rule.objects.values_list('source_prefix', flat =True).exclude(source_prefix=None)
-    queryset = queryset_model_prefix.union(queryset_source_prefix),
+    # queryset_model_prefix=Prefix.objects.values_list('prefix', flat =True).exclude(prefix=None)
+    # queryset_source_prefix=Rule.objects.values_list('source_prefix', flat =True).exclude(source_prefix=None)
+    # queryset = queryset_model_prefix.union(queryset_source_prefix),
 
     source_prefix = forms.ModelChoiceField(
         widget = widgets.StaticSelect, 

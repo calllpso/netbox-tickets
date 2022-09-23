@@ -1,3 +1,4 @@
+from random import choices
 from rest_framework import serializers
 
 from netbox.api.serializers import NetBoxModelSerializer
@@ -14,11 +15,6 @@ class NestedTicketSerializer(WritableNestedSerializer):
     class Meta:
         model = Ticket
         fields = ('id', 'url', 'display', 'ticket_id')
-
-
-
-
-
 
 
 class TicketSerializer(NetBoxModelSerializer):
@@ -41,7 +37,7 @@ class AttachFileSerializer(NetBoxModelSerializer):
         fields = (
             'ticket_id', 'file'
         )
-   
+
 
 class RuleSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(

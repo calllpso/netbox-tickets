@@ -104,23 +104,11 @@ class AttachFile(NetBoxModel):
         # return reverse('plugins:ticket_firewall:ticket_attachments', args=[self.ticket_id.id])
         return reverse('plugins:ticket_firewall:ticket', args=[self.ticket_id.id])
 
-
-    """ def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        context = self.get_context_data(object=self.object)
-        return self.render_to_response(context)
-    """
-
-
     # def delete(self, *args, **kwargs):
 
     #     #################Тут ??????????????????????????
     #     print('******* Attachment was deleted')
     #     super().delete(*args, **kwargs) 
-        
-    #     # def get_absolute_url(self):
-    #     #     # return reverse('plugins:ticket_firewall:ticket_attachments', args=[self.ticket_id.id])
-    #     #     return reverse('plugins:ticket_firewall:ticket', args=[self.ticket_id.id])
             
     #     _name = self.file.name
     #     # Delete file from disk
@@ -261,4 +249,3 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
     if not old_file == new_file:
         if os.path.isfile(old_file.path):
             os.remove(old_file.path)
-            # reverse('plugins:ticket_firewall:ticket', args=[instance.pk])

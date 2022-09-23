@@ -6,7 +6,9 @@ from django.urls import reverse
 from ipam.fields import IPAddressField
 from dcim.models import Device
 from django import forms
-
+from django.core.files.storage import FileSystemStorage
+from django.dispatch import receiver
+import os
 
 class ChoiceArrayField(ArrayField):
     def formfield(self, **kwargs):
@@ -24,8 +26,8 @@ class Ticket_status(ChoiceSet):
     inactive = 'inactive'
     staged = 'staged'
     CHOICES = [
-        (active, 'Active', 'green'),
-        (inactive, 'Inactive', 'red'),
+        (active, 'active', 'green'),
+        (inactive, 'inactive', 'red'),
         (staged, 'Staged', 'orange'),
     ]
 
@@ -33,8 +35,8 @@ class Rule_Action(ChoiceSet):
     key = 'Rule.action'
     CHOICES = [
         ('', '----', 'white'),
-        ('permit', 'Permit', 'green'),
-        ('drop', 'Drop', 'red'),
+        ('permit', 'permit', 'green'),
+        ('drop', 'drop', 'red'),
     ]
 
 class Rule_Protocol(ChoiceSet):  #это должно остаться и для массива выбора
@@ -45,63 +47,6 @@ class Rule_Protocol(ChoiceSet):  #это должно остаться и для
         ('udp', 'UDP', 'orange'),
         ('icmp', 'ICMP', 'purple'),
     ]
-
-
-# from netbox.models.features import WebhooksMixin
-# from netbox.models import ChangeLoggedModel
-# from django.contrib.contenttypes.fields import GenericForeignKey
-# from django.contrib.contenttypes.models import ContentType
-# from utilities.querysets import RestrictedQuerySet
-
-
-# class FileAttachment(WebhooksMixin, ChangeLoggedModel):
-#     """
-#     An uploaded image which is associated with an object.
-#     """
-#     content_type = models.ForeignKey(
-#         to=ContentType,
-#         on_delete=models.CASCADE
-#     )
-#     object_id = models.PositiveBigIntegerField()
-#     parent = GenericForeignKey(
-#         ct_field='content_type',
-#         fk_field='object_id'
-#     )
-#     file = models.FileField(
-#         upload_to=file_upload,
-#     )
-#     name = models.CharField(
-#         max_length=50,
-#         blank=True
-#     )
-
-
-#     def __str__(self):
-#         if self.name:
-#             return self.name
-#         filename = self.file.name.rsplit('/', 1)[-1]
-#         return filename.split('_', 2)[2]
-
-#     @property
-#     def size(self):
-#         """
-#         Wrapper around `image.size` to suppress an OSError in case the file is inaccessible. Also opportunistically
-#         catch other exceptions that we know other storage back-ends to throw.
-#         """
-#         expected_exceptions = [OSError]
-
-#         try:
-#             from botocore.exceptions import ClientError
-#             expected_exceptions.append(ClientError)
-#         except ImportError:
-#             pass
-
-#         try:
-#             return self.file.size
-#         except tuple(expected_exceptions):
-#             return None
-
-
 
 
 
@@ -141,22 +86,69 @@ class Ticket(NetBoxModel):
     def get_absolute_url(self):
         return reverse('plugins:ticket_firewall:ticket', args=[self.pk])
 
-
-from django.core.files.storage import FileSystemStorage
-fs = FileSystemStorage(location='./static')
-
+# from django.contrib.contenttypes.fields import GenericRelation
+fs = FileSystemStorage(location='./media/ticket_attachments')
 class AttachFile(NetBoxModel):
     ticket_id = models.ForeignKey(
         to=Ticket,
-        on_delete=models.CASCADE,
+        on_delete= models.CASCADE,
         related_name='file'
     )
     file = models.FileField(storage=fs) 
-    # class Meta:
-    #     ordering = ('ticket_id',)
-    #     unique_together = ('ticket_id',)
+    
+    def __str__(self):
+        return f'{self.ticket_id.id}: {self.file.name}'
+        
+
+    def get_absolute_url(self):
+        # return reverse('plugins:ticket_firewall:ticket_attachments', args=[self.ticket_id.id])
+        return reverse('plugins:ticket_firewall:ticket', args=[self.ticket_id.id])
 
 
+    """ def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+    """
+
+
+    # def delete(self, *args, **kwargs):
+
+    #     #################Тут ??????????????????????????
+    #     print('******* Attachment was deleted')
+    #     super().delete(*args, **kwargs) 
+        
+    #     # def get_absolute_url(self):
+    #     #     # return reverse('plugins:ticket_firewall:ticket_attachments', args=[self.ticket_id.id])
+    #     #     return reverse('plugins:ticket_firewall:ticket', args=[self.ticket_id.id])
+            
+    #     _name = self.file.name
+    #     # Delete file from disk
+    #     self.file.delete(save=False)
+    #     # Deleting the file erases its name. We restore the image's filename here in case we still need to reference it
+    #     # before the request finishes. (For example, to display a message indicating the ImageAttachment was deleted.)
+    #     self.file.name = _name
+
+        # return reverse('plugins:ticket_firewall:ticket', args=[self.ticket_id.id])
+    
+    @property
+    def size(self):
+        """
+        Wrapper around `image.size` to suppress an OSError in case the file is inaccessible. Also opportunistically
+        catch other exceptions that we know other storage back-ends to throw.
+        """
+        expected_exceptions = [OSError]
+
+        try:
+            from botocore.exceptions import ClientError
+            expected_exceptions.append(ClientError)
+        except ImportError:
+            pass
+
+        try:
+            return self.file.size
+        except tuple(expected_exceptions):
+            return None
 
 
 class Rule(NetBoxModel):
@@ -194,7 +186,8 @@ class Rule(NetBoxModel):
     action = models.CharField(
         max_length=30,
         choices=Rule_Action,
-        blank=True
+        blank=True,
+        default='permit'
     )
 
     description = models.CharField(
@@ -228,3 +221,44 @@ class Rule(NetBoxModel):
 
     def get_absolute_url(self):
         return reverse('plugins:ticket_firewall:rule', args=[self.pk])
+
+
+
+
+
+
+
+# эти ресиверы мутят удаление файла из файловой системы. Без них будет удаляться запись только из Базы Данных
+# их не объединить потому что разные сигналы post_delete и pre_save
+@receiver(models.signals.post_delete, sender=AttachFile)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """
+    Deletes file from filesystem
+    when corresponding `MediaFile` object is deleted.
+    """
+    if instance.file:
+        if os.path.isfile(instance.file.path):
+            os.remove(instance.file.path)
+            reverse('plugins:ticket_firewall:ticket', args=[instance.pk])
+
+
+@receiver(models.signals.pre_save, sender=AttachFile)
+def auto_delete_file_on_change(sender, instance, **kwargs):
+    """
+    Deletes old file from filesystem
+    when corresponding `MediaFile` object is updated
+    with new file.
+    """
+    if not instance.pk:
+        return False
+
+    try:
+        old_file = sender.objects.get(pk=instance.pk).file
+    except sender.DoesNotExist:
+        return False
+
+    new_file = instance.file
+    if not old_file == new_file:
+        if os.path.isfile(old_file.path):
+            os.remove(old_file.path)
+            # reverse('plugins:ticket_firewall:ticket', args=[instance.pk])

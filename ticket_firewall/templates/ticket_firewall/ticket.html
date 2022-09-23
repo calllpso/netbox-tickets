@@ -54,6 +54,7 @@
           <table class="table table-hover">
             <tbody><tr>
               <th>Name</th>
+              <th>Size</th>
               <th>Created</th>
               <th></th>
             </tr>
@@ -61,8 +62,9 @@
               <tr>
                 <td>
                   <i class="mdi mdi-file-image-outline"></i>
-                  <a class="image-preview" href="/static/{{ i.file }}" target="_blank" data-bs-original-title="" title="">{{ i.file }}</a>
+                  <a class="image-preview" href="/media/ticket_attachments/{{ i.file }}" target="_blank" data-bs-original-title="" title="">{{ i.file }}</a>
                 </td>
+                <td>{{i.size|filesizeformat }}</td>
                 <td><span title="{{i.created}}">{{i.created}}</span></td>
                 <td class="text-end noprint">
                   
@@ -71,7 +73,7 @@
                     </a>
                   
                   
-                    <a href="/plugins/ticket-firewall/attachfile/{{ i.id }}/delete/" class="btn btn-danger btn-sm lh-1" title="Delete Image">
+                    <a href="/plugins/ticket-firewall/attachfile/{{ i.id }}/delete/?return_url=/plugins/ticket-firewall/tickets/{{ i.ticket_id.id }}/" class="btn btn-danger btn-sm lh-1" title="Delete Image">
                       <i class="mdi mdi-trash-can-outline" aria-hidden="true"></i>
                     </a> 
                   
@@ -80,6 +82,20 @@
             {% endfor %}
           </tbody></table>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -97,12 +113,11 @@
   </div>
 
 
-
   <div class="row">
     <div class="col col-md-12">
       <div class="card">
         <h5 class="card-header">Rules 
-          <a href="/plugins/ticket-firewall/rules/add/?ticket_id={{object.id}}" type="button" class="btn btn-sm btn-success">
+          <a href="/plugins/ticket-firewall/rules/add/?ticket_id={{object.id}}&return_url=/plugins/ticket-firewall/tickets/{{ object.id }}" type="button" class="btn btn-sm btn-success">
             <i class="mdi mdi-plus-thick"></i> Add
           </a>
         </h5>
@@ -113,5 +128,8 @@
     </div>
 
 
+    
   </div>
 {% endblock content %}
+
+<!-- <a href="/plugins/ticket-firewall/rules/add/" type="button" class="btn btn-sm btn-success"> -->

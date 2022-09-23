@@ -10,20 +10,10 @@ from netbox.api.serializers import WritableNestedSerializer
 class NestedTicketSerializer(WritableNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
         view_name='plugins-api:ticket_firewall-api:ticket-detail'
-        # view_name='plugins-api:ticket_firewall-api:ticketlist-detail'
     )
     class Meta:
         model = Ticket
         fields = ('id', 'url', 'display', 'ticket_id')
-
-# class NestedRuleSerializer(WritableNestedSerializer):
-#     url = serializers.HyperlinkedIdentityField(
-#         view_name='plugins-api:ticket_firewall-api:rule-detail'
-#     )
-
-#     class Meta:
-#         model = Rule
-#         fields = ('id', 'url', 'display', 'index')
 
 
 
@@ -45,7 +35,6 @@ class TicketSerializer(NetBoxModelSerializer):
         )
 
 class AttachFileSerializer(NetBoxModelSerializer):
-
     ticket_id = NestedTicketSerializer()
     class Meta:
         model = AttachFile

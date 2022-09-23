@@ -2,6 +2,7 @@ from netbox.views import generic
 from . import forms, models, tables
 from django.db.models import Count
 from . import forms, models, tables, filtersets
+from django.shortcuts import render
 
 class AttachFileEditView(generic.ObjectEditView):
     queryset = models.AttachFile.objects.all()
@@ -9,16 +10,16 @@ class AttachFileEditView(generic.ObjectEditView):
 
 class AttachFileDeleteView(generic.ObjectDeleteView):
     queryset = models.AttachFile.objects.all()
+    
 
 class TicketView(generic.ObjectView):
     queryset = models.Ticket.objects.all()
-
+    #<int>:pk
     #счетчик rules
     def get_extra_context(self, request, instance):
         table = tables.RuleTable(instance.rules.all())
         table.configure(request)
-
-        files = models.AttachFile.objects.all()
+        files = models.AttachFile.objects.filter(ticket_id = instance)
 
         return {
             'files':    files,

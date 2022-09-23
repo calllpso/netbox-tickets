@@ -16,15 +16,15 @@ class AttachFileForm(NetBoxModelForm):
     def __init__(self, *args, **kwargs):
         super(AttachFileForm,self).__init__(*args, **kwargs)
 
-
         if 'ticket_id' in kwargs:
             ticket_id = kwargs.pop('ticket_id')
             self.fields['ticket_id'].initial = ticket_id
-
-
+    
     class Meta:
         model = AttachFile
         fields = ('ticket_id','file',)
+
+    
 
 
 class TicketForm(NetBoxModelForm):
@@ -53,7 +53,7 @@ class RuleForm(NetBoxModelForm):
         choices=Rule_Protocol,
         required=False
     )
-    #то что ниже не делай! index должен быть всегда required=True: это ж ссылка из тикета 
+    #нужно index д.б. всегда required=True: это ж ссылка из тикета 
     # index = forms.CharField(
     #     required=False
     # )
@@ -71,7 +71,6 @@ class RuleForm(NetBoxModelForm):
             self.initial['index'] = index
         except:
             pass
-
 
     class Meta:
         model = Rule
@@ -157,5 +156,3 @@ class TicketFilterForm(NetBoxModelFilterSetForm):
         choices=Ticket_status,
         required=False
     )
-
-   

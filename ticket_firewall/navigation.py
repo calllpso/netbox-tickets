@@ -24,3 +24,11 @@ menu_items = (
         link_text='Ticket Rules',
     ),
 )
+
+# n = Menu(
+#         label="Firewall tickets",
+#         icon_class="mdi mdi-lock-open-check",
+#         groups=menu_items
+#     )
+
+# MENUS.append(n)

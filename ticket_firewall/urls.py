@@ -15,9 +15,8 @@ urlpatterns = (
 
     #для журнала необходимо добавить WritableNestedSerializer  
     path('ticket/<int:pk>/journal/', ObjectJournalView.as_view(), name='ticket_journal', kwargs={'model': models.Ticket}),
-    # Access list rules
     path('rules/', views.RuleListView.as_view(), name='rule_list'),
-    path('rules/add/', views.RuleEditView.as_view(), name='rule_add'),
+    path('rules/add/', views.RuleCreateView.as_view(), name='rule_add'),
     path('rules/<int:pk>/', views.RuleView.as_view(), name='rule'),
     path('rules/<int:pk>/edit/', views.RuleEditView.as_view(), name='rule_edit'),
     path('rules/<int:pk>/delete/', views.RuleDeleteView.as_view(), name='rule_delete'),
@@ -31,6 +30,5 @@ urlpatterns = (
     path('attachfile/add/', views.AttachFileEditView.as_view(), name='attachfile_add'),
     path('attachfile/<int:pk>/edit/', views.AttachFileEditView.as_view(), name='attachfile_edit'),
     path('attachfile/<int:pk>/delete/', views.AttachFileDeleteView.as_view(), name='attachfile_delete'),
-    # path('attachfile/<int:pk>/delete/', views.AttachFileDeleteView.as_view(), name='attachfile_delete'),
 
 )

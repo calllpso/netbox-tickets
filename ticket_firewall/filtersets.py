@@ -10,12 +10,12 @@ from utilities.filters import MultiValueCharFilter,MultiValueNumberFilter
 class RuleFilterSet(NetBoxModelFilterSet):
     source_prefix = MultiValueCharFilter()
     destination_prefix =  MultiValueCharFilter()
-    device = MultiValueCharFilter()
+
     index = MultiValueNumberFilter()
 
     class Meta:
         model = Rule
-        fields = ('ticket_id', 'device', 'index', 'source_prefix', 'destination_prefix','closed', 'action', 'opened',
+        fields = ('ticket_id', 'index', 'source_prefix', 'destination_prefix','closed', 'action', 'opened',
         )
     def search(self, queryset, name, value):
         # если добавить Q(tags=value), то будет ошибка. это только для тегов. qs без contains работает 

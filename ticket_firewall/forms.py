@@ -3,8 +3,7 @@ from utilities.forms.fields import CommentField, DynamicModelChoiceField,TagFilt
 from utilities.forms import DatePicker,widgets
 from .models import Ticket, Rule, Rule_Action, Ticket_status,Rule_Protocol, AttachFile
 from django import forms
-from dcim.models import Device
-from ipam.models import Prefix
+# from ipam.models import Prefix
 from django.db.models import Max
 
 
@@ -34,33 +33,45 @@ class TicketForm(NetBoxModelForm):
         model = Ticket
         fields = ('ticket_id', 'status', 'id_directum', 'tags', 'description', 'comments')
 
-class RuleForm(NetBoxModelForm):
+
+
+class RuleFormEdit(NetBoxModelForm):
     ###из названия ниже берет создает поле в форме создания
     ticket_id = DynamicModelChoiceField(
         queryset=Ticket.objects.all()
     )
-    device = DynamicModelChoiceField(
-        queryset=Device.objects.all(),
-        required=False
-    )
-    device = DynamicModelChoiceField(
-        queryset=Device.objects.all(),
-        required=False
-    )
-    
+
     protocol = forms.MultipleChoiceField(
         widget = widgets.StaticSelectMultiple, 
         choices=Rule_Protocol,
         required=False
     )
     #нужно index д.б. всегда required=True: это ж ссылка из тикета 
-    # index = forms.CharField(
-    #     required=False
-    # )
+    class Meta:
+        model = Rule
+        fields = (
+        'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
+        'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'tags',
+        )
+        widgets = {
+            'opened': DatePicker(),
+            'closed': DatePicker()
+        }
 
+class RuleFormCreate(NetBoxModelForm):
+    ###из названия ниже берет создает поле в форме создания
+    ticket_id = DynamicModelChoiceField(
+        queryset=Ticket.objects.all()
+    )
 
+    protocol = forms.MultipleChoiceField(
+        widget = widgets.StaticSelectMultiple, 
+        choices=Rule_Protocol,
+        required=False
+    )
+    #нужно index д.б. всегда required=True: это ж ссылка из тикета 
     def __init__(self, *args, **kwargs):
-        super(RuleForm,self).__init__(*args, **kwargs)
+        super(RuleFormCreate,self).__init__(*args, **kwargs)
         if 'ticket_id' in kwargs:
             ticket_id = kwargs.pop('ticket_id')
             self.fields['ticket_id'].initial = ticket_id
@@ -75,7 +86,7 @@ class RuleForm(NetBoxModelForm):
     class Meta:
         model = Rule
         fields = (
-           'ticket_id', 'device', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
+           'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
            'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'tags',
         )
         widgets = {
@@ -92,23 +103,12 @@ class RuleFilterForm(NetBoxModelFilterSetForm):
         required=False
     )
 
-    device = DynamicModelMultipleChoiceField(
-        queryset=Device.objects.all(),
-        required=False
-    ) 
-
     index = forms.ModelMultipleChoiceField(
         widget = widgets.StaticSelectMultiple, 
         queryset=Rule.objects.values_list('index', flat =True),
         required=False
     )
     
-
-
-
-
-    # Ниже надо включить !!!!!!!
-    #  
     action = forms.ChoiceField(
         choices=Rule_Action,
         widget = widgets.StaticSelect,

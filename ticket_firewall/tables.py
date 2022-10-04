@@ -36,9 +36,6 @@ class ChoiceFieldArrayColumn(tables.Column):
         return value
 
 class RuleTable(NetBoxTable):
-    device = tables.Column(
-        linkify=True
-    )
     ticket_id = tables.Column(
         linkify=True
     )
@@ -51,10 +48,10 @@ class RuleTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = Rule
         fields = (
-            'pk', 'id', 'device', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
+            'pk', 'id', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
             'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'actions',
         )
         default_columns = (
-            'device', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
+            'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
             'destination_ports', 'protocol', 'action', 'opened', 'closed', 'actions',
         )

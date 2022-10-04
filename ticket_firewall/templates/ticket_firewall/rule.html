@@ -14,7 +14,7 @@
             <tr>
               <th scope="row">Device</th>
               <td>
-                <a href="{{ object.device.get_absolute_url }}">{{ object.device }}</a>
+                example device
               </td>
             </tr>
 
@@ -51,7 +51,7 @@
               <th scope="row">Source Prefix</th>
               <td>
                 {% if object.source_prefix %}
-                  <a href="{{ object.source_prefix.get_absolute_url }}">{{ object.source_prefix }}</a>
+                  {{ object.source_prefix }}
                 {% else %}
                   {{ ''|placeholder }}
                 {% endif %}
@@ -65,7 +65,7 @@
               <th scope="row">Destination Prefix</th>
               <td>
                 {% if object.destination_prefix %}
-                  <a href="{{ object.destination_prefix.get_absolute_url }}">{{ object.destination_prefix }}</a>
+                  {{ object.destination_prefix }}
                 {% else %}
                   {{ ''|placeholder }}
                 {% endif %}
@@ -79,6 +79,27 @@
               <th scope="row">Action</th>
               <td>{{ object.get_action_display }}</td>
             </tr>
+            <tr>
+              <th scope="row">Opened date</th>
+              <td>
+                {% if object.opened %}
+                  {{ object.opened }}
+                {% else %}
+                  {{ ''|placeholder }}
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Closed date</th>
+              <td>
+                {% if object.closed %}
+                  {{ object.closed }}
+                {% else %}
+                  {{ ''|placeholder }}
+                {% endif %}
+              </td>
+            </tr>
+
           </table>
         </div>
       </div>

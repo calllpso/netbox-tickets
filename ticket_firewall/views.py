@@ -2,7 +2,7 @@ from netbox.views import generic
 from . import forms, models, tables
 from django.db.models import Count
 from . import forms, models, tables, filtersets
-from django.shortcuts import render
+# from django.shortcuts import render
 
 class AttachFileEditView(generic.ObjectEditView):
     queryset = models.AttachFile.objects.all()
@@ -14,8 +14,6 @@ class AttachFileDeleteView(generic.ObjectDeleteView):
 
 class TicketView(generic.ObjectView):
     queryset = models.Ticket.objects.all()
-    #<int>:pk
-    #счетчик rules
     def get_extra_context(self, request, instance):
         table = tables.RuleTable(instance.rules.all())
         table.configure(request)
@@ -26,14 +24,12 @@ class TicketView(generic.ObjectView):
             'rules_table': table,
         }
 
-
 #ListList
 class TicketListView(generic.ObjectListView):
     queryset = models.Ticket.objects.annotate(
         rule_count=Count('rules')
     )
     table = tables.TicketTable
-    ############
     filterset = filtersets.TicketFilterSet
     filterset_form = forms.TicketFilterForm
 
@@ -56,9 +52,14 @@ class RuleListView(generic.ObjectListView):
     filterset_form = forms.RuleFilterForm
     
 
+class RuleCreateView(generic.ObjectEditView):
+    queryset = models.Rule.objects.all()
+    form = forms.RuleFormCreate
+
 class RuleEditView(generic.ObjectEditView):
     queryset = models.Rule.objects.all()
-    form = forms.RuleForm
+    form = forms.RuleFormEdit
+
 
 
 class RuleDeleteView(generic.ObjectDeleteView):

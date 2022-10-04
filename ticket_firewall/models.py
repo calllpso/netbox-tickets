@@ -1,10 +1,10 @@
+from pyexpat import model
 from utilities.choices import ChoiceSet
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from netbox.models import NetBoxModel
 from django.urls import reverse
 from ipam.fields import IPAddressField
-from dcim.models import Device
 from django import forms
 from django.core.files.storage import FileSystemStorage
 from django.dispatch import receiver
@@ -49,7 +49,6 @@ class Rule_Protocol(ChoiceSet):  #это должно остаться и для
     ]
 
 
-
 class Ticket(NetBoxModel):
     ticket_id = models.CharField(
         max_length=100,
@@ -64,29 +63,31 @@ class Ticket(NetBoxModel):
         max_length=100,
         blank=True
     )
-
     description = models.CharField(
         max_length=500,
         blank=True
     )
-
     comments = models.TextField(
         blank=True
     )
 
+    clone_fields = (
+        'ticket_id', 'status', 'id_directum', 'description', 'comments'
+    )
+
     class Meta:
         ordering = ('ticket_id',)
-
+        
     def __str__(self):
         return self.ticket_id
-    
     def get_status_color(self):
         return Ticket_status.colors.get(self.status)
-    
     def get_absolute_url(self):
         return reverse('plugins:ticket_firewall:ticket', args=[self.pk])
 
-# from django.contrib.contenttypes.fields import GenericRelation
+
+    
+
 fs = FileSystemStorage(location='./media/ticket_attachments')
 class AttachFile(NetBoxModel):
     ticket_id = models.ForeignKey(
@@ -101,23 +102,8 @@ class AttachFile(NetBoxModel):
         
 
     def get_absolute_url(self):
-        # return reverse('plugins:ticket_firewall:ticket_attachments', args=[self.ticket_id.id])
         return reverse('plugins:ticket_firewall:ticket', args=[self.ticket_id.id])
 
-    # def delete(self, *args, **kwargs):
-
-    #     #################Тут ??????????????????????????
-    #     print('******* Attachment was deleted')
-    #     super().delete(*args, **kwargs) 
-            
-    #     _name = self.file.name
-    #     # Delete file from disk
-    #     self.file.delete(save=False)
-    #     # Deleting the file erases its name. We restore the image's filename here in case we still need to reference it
-    #     # before the request finishes. (For example, to display a message indicating the ImageAttachment was deleted.)
-    #     self.file.name = _name
-
-        # return reverse('plugins:ticket_firewall:ticket', args=[self.ticket_id.id])
     
     @property
     def size(self):
@@ -146,7 +132,6 @@ class Rule(NetBoxModel):
         related_name='rules'
         # doesn't work: help_text='select corresponding ticket'
     )
-    device = models.ForeignKey(to="dcim.Device", on_delete=models.SET_NULL, null=True, blank=True)
 
     index = models.PositiveIntegerField(unique=True) #!! not blank=True
     
@@ -164,6 +149,7 @@ class Rule(NetBoxModel):
         blank=True, null=True, default=None
     )
     destination_ports = ArrayField(
+        help_text='[port], [port1,port2], [any], [port1-port100]',
         base_field=models.CharField(max_length=50),
         blank=True
     )
@@ -195,11 +181,13 @@ class Rule(NetBoxModel):
         verbose_name='Closing date'
     )
 
+    clone_fields = (
+        'ticket_id', 'source_prefix', 'source_ports', 'destination_prefix', 'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed'
+    )
+
     class Meta:
         ordering = ('ticket_id', 'index')
         unique_together = ('ticket_id', 'index')
-
-       
 
     def __str__(self):
         return f'{self.ticket_id}: Rule {self.index}'

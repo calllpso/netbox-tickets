@@ -12,6 +12,7 @@ urlpatterns = (
     path('tickets/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='ticket_changelog', kwargs={
         'model': models.Ticket
     }),
+    path('tickets/import/', views.TicketBulkImportView.as_view(), name='ticket_import'),
 
     #для журнала необходимо добавить WritableNestedSerializer  
     path('ticket/<int:pk>/journal/', ObjectJournalView.as_view(), name='ticket_journal', kwargs={'model': models.Ticket}),
@@ -24,7 +25,7 @@ urlpatterns = (
     path('rules/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='rule_changelog', kwargs={
         'model': models.Rule
     }),
-
+    path('rules/import/', views.RuleBulkImportView.as_view(), name='rules_import'),
 
 
     path('attachfile/add/', views.AttachFileEditView.as_view(), name='attachfile_add'),

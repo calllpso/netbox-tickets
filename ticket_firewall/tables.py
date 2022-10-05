@@ -55,3 +55,4 @@ class RuleTable(NetBoxTable):
             'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
             'destination_ports', 'protocol', 'action', 'opened', 'closed', 'actions',
         )
+

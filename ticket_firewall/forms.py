@@ -162,3 +162,35 @@ class TicketFilterForm(NetBoxModelFilterSetForm):
         choices=Ticket_status,
         required=False
     )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+from netbox.forms import NetBoxModelCSVForm
+from utilities.forms import CSVChoiceField, CSVContentTypeField, CSVModelChoiceField, CSVTypedChoiceField, SlugField
+
+class TicketCSVForm(NetBoxModelCSVForm):
+    class Meta:
+        model = Ticket
+        fields = ('ticket_id', 'status', 'id_directum', 'description', 'comments',)
+    def __init__(self, data=None, *args, **kwargs):
+        super().__init__(data, *args, **kwargs)
+
+
+class RuleCSVForm(NetBoxModelCSVForm):
+    class Meta:
+        model = Rule
+        fields = ('ticket_id', 'index', 'protocol', 'source_prefix', 'source_ports',
+            'destination_prefix', 'destination_ports', 'action', 'tags', 'opened', 'closed')
+    def __init__(self, data=None, *args, **kwargs):
+        super().__init__(data, *args, **kwargs)

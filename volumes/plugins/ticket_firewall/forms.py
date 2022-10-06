@@ -23,9 +23,6 @@ class AttachFileForm(NetBoxModelForm):
         model = AttachFile
         fields = ('ticket_id','file',)
 
-    
-
-
 class TicketForm(NetBoxModelForm):
 
     comments = CommentField()
@@ -164,20 +161,7 @@ class TicketFilterForm(NetBoxModelFilterSetForm):
     )
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 from netbox.forms import NetBoxModelCSVForm
-from utilities.forms import CSVChoiceField, CSVContentTypeField, CSVModelChoiceField, CSVTypedChoiceField, SlugField
 
 class TicketCSVForm(NetBoxModelCSVForm):
     class Meta:
@@ -188,9 +172,19 @@ class TicketCSVForm(NetBoxModelCSVForm):
 
 
 class RuleCSVForm(NetBoxModelCSVForm):
+    from django.db import models
+    # source_prefix=models.CharField(max_length=50)
+    # destination_prefix=models.CharField(max_length=50)
+    # source_ports = models.Array
+    from taggit.models import Tag
+    taggg = Tag.objects.all()
+
     class Meta:
         model = Rule
-        fields = ('ticket_id', 'index', 'protocol', 'source_prefix', 'source_ports',
-            'destination_prefix', 'destination_ports', 'action', 'tags', 'opened', 'closed')
+        fields = ('ticket_id', 'index', 'source_ports', 'destination_ports', 'action', 'opened', 'closed', 'protocol', 'source_prefix',)
+        # fields = ('source_prefix', 'destination_prefix','tags')
     def __init__(self, data=None, *args, **kwargs):
         super().__init__(data, *args, **kwargs)
+
+
+

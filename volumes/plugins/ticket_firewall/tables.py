@@ -45,11 +45,12 @@ class RuleTable(NetBoxTable):
     protocol = ChoiceFieldArrayColumn()
 
     action = ChoiceFieldColumn()
+
     class Meta(NetBoxTable.Meta):
         model = Rule
         fields = (
             'pk', 'id', 'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
-            'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'actions',
+            'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'actions', 
         )
         default_columns = (
             'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',

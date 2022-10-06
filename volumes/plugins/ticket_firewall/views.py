@@ -2,20 +2,12 @@ from netbox.views import generic
 from . import forms, models, tables
 from django.db.models import Count
 from . import forms, models, tables, filtersets
-# from django.shortcuts import render
 
 class AttachFileEditView(generic.ObjectEditView):
     queryset = models.AttachFile.objects.all()
     form = forms.AttachFileForm
 class AttachFileDeleteView(generic.ObjectDeleteView):
     queryset = models.AttachFile.objects.all()
-    
-
-
-
-
-
-
 
 class TicketView(generic.ObjectView):
     queryset = models.Ticket.objects.all()
@@ -50,16 +42,11 @@ class TicketBulkImportView(generic.BulkImportView):
     table = tables.TicketTable ####
 
 
+
 class RuleBulkImportView(generic.BulkImportView):
     queryset = models.Rule.objects.all()
     model_form = forms.RuleCSVForm
     table = tables.RuleTable ####
-
-
-
-
-
-
 
 
 

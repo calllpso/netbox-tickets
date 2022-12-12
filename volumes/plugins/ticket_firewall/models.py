@@ -39,14 +39,14 @@ class Rule_Action(ChoiceSet):
         ('drop', 'drop', 'red'),
     ]
 
-class Rule_Protocol(ChoiceSet):  #это должно остаться и для массива выбора
-    key = 'Rule.protocol'
-    CHOICES = [
-        ('ip', 'IP', 'green'),
-        ('tcp', 'TCP', 'blue'),
-        ('udp', 'UDP', 'orange'),
-        ('icmp', 'ICMP', 'purple'),
-    ]
+# class Rule_Protocol(ChoiceSet):  #это должно остаться и для массива выбора
+#     key = 'Rule.protocol'
+#     CHOICES = [
+#         ('ip', 'IP', 'green'),
+#         ('tcp', 'TCP', 'blue'),
+#         ('udp', 'UDP', 'orange'),
+#         ('icmp', 'ICMP', 'purple'),
+#     ]
 
 
 class Ticket(NetBoxModel):
@@ -77,7 +77,6 @@ class Ticket(NetBoxModel):
 
     class Meta:
         ordering = ('ticket_id',)
-        
     def __str__(self):
         return self.ticket_id
     def get_status_color(self):
@@ -86,8 +85,6 @@ class Ticket(NetBoxModel):
         return reverse('plugins:ticket_firewall:ticket', args=[self.pk])
 
 
-    
-
 fs = FileSystemStorage(location='./media/ticket_attachments')
 class AttachFile(NetBoxModel):
     ticket_id = models.ForeignKey(
@@ -95,16 +92,16 @@ class AttachFile(NetBoxModel):
         on_delete= models.CASCADE,
         related_name='file'
     )
-    file = models.FileField(storage=fs) 
-    
+    file = models.FileField(storage=fs)
+
     def __str__(self):
         return f'{self.ticket_id.id}: {self.file.name}'
-        
+
 
     def get_absolute_url(self):
         return reverse('plugins:ticket_firewall:ticket', args=[self.ticket_id.id])
 
-    
+
     @property
     def size(self):
         """
@@ -125,6 +122,18 @@ class AttachFile(NetBoxModel):
             return None
 
 
+
+class Protocol(models.Model):
+    name = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.name
+    def get_absolute_url(self):
+        return reverse('plugins:ticket_firewall:protocol', args=[self.pk])
+
+
+
+
 class Rule(NetBoxModel):
     ticket_id = models.ForeignKey(
         to=Ticket,
@@ -134,11 +143,12 @@ class Rule(NetBoxModel):
     )
 
     index = models.PositiveIntegerField(unique=True) #!! not blank=True
-    
+
     source_prefix = IPAddressField(
         help_text='IPv4 or IPv6 address (with mask)',
         blank=True, null=True, default=None
     )
+
     source_ports = ArrayField(
         help_text='Left field blank for ANY ports',
         base_field=models.CharField(max_length=50),
@@ -154,8 +164,7 @@ class Rule(NetBoxModel):
         blank=True
     )
 
-    protocol = ChoiceArrayField(models.CharField(max_length=4, choices=Rule_Protocol, blank=True))
-
+    protocol = models.ManyToManyField(Protocol, blank=True)
 
     action = models.CharField(
         max_length=30,
@@ -182,7 +191,7 @@ class Rule(NetBoxModel):
     )
 
     clone_fields = (
-        'ticket_id', 'source_prefix', 'source_ports', 'destination_prefix', 'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed'
+        'ticket_id', 'source_ports', 'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed','source_prefix', 'destination_prefix'
     )
 
     class Meta:
@@ -198,10 +207,46 @@ class Rule(NetBoxModel):
     def get_absolute_url(self):
         return reverse('plugins:ticket_firewall:rule', args=[self.pk])
 
+    def __unicode__(self): #?
+        return self
 
 
 
 
+
+# bbq_sauce = Sauce.objects.create(name="Barbeque")
+
+# class Rule_Protocol_choisec(ChoiceSet):  #это должно остаться и для массива выбора
+#     key = 'Rule.protocol'
+#     CHOICES = [
+#         ('ip', 'IP', 'green'),
+#         ('tcp', 'TCP', 'blue'),
+#         ('udp', 'UDP', 'orange'),
+#         ('icmp', 'ICMP', 'purple'),
+#     ]
+
+# class ProtocolElections(models.Model):..
+#     ELECTION_TYPE  = (
+#         ('ip', 'IP'),
+#         ('tcp', 'TCP'),
+#         ('udp', 'UDP'),
+#         ('icmp', 'ICMP'),
+#     )
+#     election_type = models.CharField(null=True, max_length=100, default=None, choices=ELECTION_TYPE, verbose_name = 'Which elections do you regularly vote in or intend to vote in? Select all that apply.')
+#     def __unicode__(self): #?
+#         return self
+#     def __str__(self):
+#         return self.headline
+# class RuleProtocolElections(models.Model):..
+#     ELECTION_TYPE  = (
+#         ('ip', 'IP'),
+#         ('tcp', 'TCP'),
+#         ('udp', 'UDP'),
+#         ('icmp', 'ICMP'),
+#     )
+#     election_type = models.CharField(null=True, max_length=100, default=None, choices=ELECTION_TYPE )
+#     def __unicode__(self): #?
+#         return self
 
 
 # эти ресиверы мутят удаление файла из файловой системы. Без них будет удаляться запись только из Базы Данных

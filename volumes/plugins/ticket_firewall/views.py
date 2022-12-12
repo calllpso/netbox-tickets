@@ -36,21 +36,6 @@ class TicketDeleteView(generic.ObjectDeleteView):
 
 
 
-class TicketBulkImportView(generic.BulkImportView):
-    queryset = models.Ticket.objects.all()
-    model_form = forms.TicketCSVForm
-    table = tables.TicketTable ####
-
-
-
-class RuleBulkImportView(generic.BulkImportView):
-    queryset = models.Rule.objects.all()
-    model_form = forms.RuleCSVForm
-    table = tables.RuleTable ####
-
-
-
-
 
 #one
 class RuleView(generic.ObjectView):
@@ -70,3 +55,32 @@ class RuleEditView(generic.ObjectEditView):
     form = forms.RuleFormEdit
 class RuleDeleteView(generic.ObjectDeleteView):
     queryset = models.Rule.objects.all()
+
+
+#protocols
+# class ProtocolView(generic.ObjectView):
+#     queryset = models.Protocol.objects.all()
+# #many
+# class ProtocolListView(generic.ObjectListView):
+#     queryset = models.Protocol.objects.all()
+#     table = tables.ProtocolTable ###
+#     filterset = filtersets.ProtocolFilterSet
+#     filterset_form = forms.ProtocolFilterForm 
+
+
+
+
+
+# IMPORT
+
+class TicketBulkImportView(generic.BulkImportView):
+    queryset = models.Ticket.objects.all()
+    model_form = forms.TicketCSVForm
+    table = tables.TicketTable ####
+
+
+
+class RuleBulkImportView(generic.BulkImportView):
+    queryset = models.Rule.objects.all()
+    model_form = forms.RuleCSVForm
+    table = tables.RuleTable ####

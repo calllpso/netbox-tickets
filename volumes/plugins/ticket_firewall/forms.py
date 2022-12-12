@@ -1,9 +1,8 @@
 from netbox.forms import NetBoxModelForm,NetBoxModelFilterSetForm
 from utilities.forms.fields import CommentField, DynamicModelChoiceField,TagFilterField, DynamicModelMultipleChoiceField
 from utilities.forms import DatePicker,widgets
-from .models import Ticket, Rule, Rule_Action, Ticket_status,Rule_Protocol, AttachFile
+from .models import Ticket, Rule, Rule_Action, Ticket_status, AttachFile, Protocol
 from django import forms
-# from ipam.models import Prefix
 from django.db.models import Max
 
 
@@ -31,24 +30,24 @@ class TicketForm(NetBoxModelForm):
         fields = ('ticket_id', 'status', 'id_directum', 'tags', 'description', 'comments')
 
 
-
 class RuleFormEdit(NetBoxModelForm):
     ###из названия ниже берет создает поле в форме создания
     ticket_id = DynamicModelChoiceField(
         queryset=Ticket.objects.all()
     )
 
-    protocol = forms.MultipleChoiceField(
+    protocol = forms.ModelMultipleChoiceField(
         widget = widgets.StaticSelectMultiple, 
-        choices=Rule_Protocol,
+        queryset = Protocol.objects.values_list('name', flat =True),
         required=False
     )
+    
     #нужно index д.б. всегда required=True: это ж ссылка из тикета 
     class Meta:
         model = Rule
         fields = (
-        'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
-        'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'tags',
+            'ticket_id', 'index', 'source_ports', 'destination_ports', 'protocol', 'action', 
+            'description', 'opened', 'closed', 'tags', 'source_prefix', 'destination_prefix',
         )
         widgets = {
             'opened': DatePicker(),
@@ -60,12 +59,20 @@ class RuleFormCreate(NetBoxModelForm):
     ticket_id = DynamicModelChoiceField(
         queryset=Ticket.objects.all()
     )
+    
+    #it works. 
+    # but: django.urls.exceptions.NoReverseMatch: Reverse for 'protocol-list' not found. 'protocol-list' is not a valid view function or pattern name.
+    # protocol = DynamicModelChoiceField(
+    #     queryset=Protocol.objects.all()
+    # )
 
-    protocol = forms.MultipleChoiceField(
+    protocol = forms.ModelMultipleChoiceField(
         widget = widgets.StaticSelectMultiple, 
-        choices=Rule_Protocol,
+        queryset = Protocol.objects.all(), #.values_list('name', flat =True),
         required=False
     )
+
+    
     #нужно index д.б. всегда required=True: это ж ссылка из тикета 
     def __init__(self, *args, **kwargs):
         super(RuleFormCreate,self).__init__(*args, **kwargs)
@@ -83,14 +90,13 @@ class RuleFormCreate(NetBoxModelForm):
     class Meta:
         model = Rule
         fields = (
-           'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
-           'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'tags',
+            'ticket_id', 'index', 'source_ports', 'source_prefix', 'destination_prefix',
+            'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'tags',
         )
         widgets = {
             'opened': DatePicker(),
             'closed': DatePicker()
         }
-
 
 class RuleFilterForm(NetBoxModelFilterSetForm):
     model = Rule
@@ -99,18 +105,13 @@ class RuleFilterForm(NetBoxModelFilterSetForm):
         queryset=Ticket.objects.all(),
         required=False
     )
-
-    index = forms.ModelMultipleChoiceField(
-        widget = widgets.StaticSelectMultiple, 
-        queryset=Rule.objects.values_list('index', flat =True),
-        required=False
-    )
     
     action = forms.ChoiceField(
         choices=Rule_Action,
         widget = widgets.StaticSelect,
         required=False
     )
+
     
     # queryset_model_prefix=Prefix.objects.values_list('prefix', flat =True).exclude(prefix=None)
     # queryset_source_prefix=Rule.objects.values_list('source_prefix', flat =True).exclude(source_prefix=None)
@@ -121,8 +122,8 @@ class RuleFilterForm(NetBoxModelFilterSetForm):
         queryset = Rule.objects.values_list('source_prefix', flat =True).exclude(source_prefix=None),
         required=False
     )
-    destination_prefix = forms.ModelChoiceField(
-        widget = widgets.StaticSelect,
+    destination_prefix = forms.ModelMultipleChoiceField (
+        widget = widgets.StaticSelectMultiple,
         queryset=Rule.objects.values_list('destination_prefix', flat =True).exclude(destination_prefix=None),
         required=False
     )
@@ -138,6 +139,7 @@ class RuleFilterForm(NetBoxModelFilterSetForm):
         queryset=Rule.objects.values_list('closed', flat =True).exclude(closed=None),
         required=False
     )
+    
 
 class TicketFilterForm(NetBoxModelFilterSetForm):
     model = Ticket
@@ -161,6 +163,30 @@ class TicketFilterForm(NetBoxModelFilterSetForm):
     )
 
 
+# class ProtocolFilterForm(NetBoxModelFilterSetForm):
+#     model = Protocol
+#     tag = TagFilterField(model)
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#CSV
+
 from netbox.forms import NetBoxModelCSVForm
 
 class TicketCSVForm(NetBoxModelCSVForm):
@@ -172,17 +198,12 @@ class TicketCSVForm(NetBoxModelCSVForm):
 
 
 class RuleCSVForm(NetBoxModelCSVForm):
-    from django.db import models
-    # source_prefix=models.CharField(max_length=50)
-    # destination_prefix=models.CharField(max_length=50)
-    # source_ports = models.Array
     from taggit.models import Tag
     taggg = Tag.objects.all()
 
     class Meta:
         model = Rule
-        fields = ('ticket_id', 'index', 'source_ports', 'destination_ports', 'action', 'opened', 'closed', 'protocol', 'source_prefix',)
-        # fields = ('source_prefix', 'destination_prefix','tags')
+        fields = ('ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix', 'destination_ports', 'action', 'opened', 'closed', 'protocol', 'tags',)
     def __init__(self, data=None, *args, **kwargs):
         super().__init__(data, *args, **kwargs)
 

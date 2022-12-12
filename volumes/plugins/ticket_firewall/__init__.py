@@ -4,7 +4,7 @@ class NetBox_TicketsListsConfig(PluginConfig):
     name = 'ticket_firewall'
     verbose_name = 'Firewall Tickets'
     description = 'this description'
-    version = '0.00000001'
+    version = '0.0.1'
     base_url = 'ticket-firewall'
 
 #устанавливает

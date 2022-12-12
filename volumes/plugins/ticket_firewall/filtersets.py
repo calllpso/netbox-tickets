@@ -1,5 +1,5 @@
 from netbox.filtersets import NetBoxModelFilterSet
-from .models import Rule, Ticket
+from .models import Rule, Ticket, Protocol
 
 from django.db.models import Q
 
@@ -32,3 +32,15 @@ class TicketFilterSet(NetBoxModelFilterSet):
     def search(self, queryset, name, value):
         qs_filter = Q(ticket_id__contains=value) | Q(id_directum__contains=value) | Q(status__contains=value)
         return queryset.filter(qs_filter)
+
+
+# class ProtocolFilterSet(NetBoxModelFilterSet):
+#     name = MultiValueCharFilter()
+
+    # class Meta:
+    #     model = Protocol
+    #     fields = ('name', )
+    # def search(self, queryset, name, value):
+    #     # если добавить Q(tags=value), то будет ошибка. это только для тегов. qs без contains работает 
+    #     qs_filter = Q(name__contains=value)
+    #     return queryset.filter(qs_filter)         

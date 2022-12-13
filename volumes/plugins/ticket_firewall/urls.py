@@ -32,7 +32,4 @@ urlpatterns = (
     path('attachfile/<int:pk>/edit/', views.AttachFileEditView.as_view(), name='attachfile_edit'),
     path('attachfile/<int:pk>/delete/', views.AttachFileDeleteView.as_view(), name='attachfile_delete'),
 
-
-    # path('protocols/', views.ProtocolListView.as_view(), name='protocol_list'),
-    # path('protocols/<int:pk>/', views.ProtocolView.as_view(), name='protocol'),
 )

@@ -38,7 +38,7 @@ class RuleFormEdit(NetBoxModelForm):
 
     protocol = forms.ModelMultipleChoiceField(
         widget = widgets.StaticSelectMultiple, 
-        queryset = Protocol.objects.values_list('name', flat =True),
+        queryset = Protocol.objects.all(),
         required=False
     )
     
@@ -68,7 +68,7 @@ class RuleFormCreate(NetBoxModelForm):
 
     protocol = forms.ModelMultipleChoiceField(
         widget = widgets.StaticSelectMultiple, 
-        queryset = Protocol.objects.all(), #.values_list('name', flat =True),
+        queryset = Protocol.objects.all(),
         required=False
     )
 
@@ -112,6 +112,11 @@ class RuleFilterForm(NetBoxModelFilterSetForm):
         required=False
     )
 
+    protocol = forms.ModelMultipleChoiceField(
+        widget = widgets.StaticSelectMultiple, 
+        queryset = Protocol.objects.all(),
+        required=False
+    )
     
     # queryset_model_prefix=Prefix.objects.values_list('prefix', flat =True).exclude(prefix=None)
     # queryset_source_prefix=Rule.objects.values_list('source_prefix', flat =True).exclude(source_prefix=None)
@@ -162,11 +167,6 @@ class TicketFilterForm(NetBoxModelFilterSetForm):
         required=False
     )
 
-
-# class ProtocolFilterForm(NetBoxModelFilterSetForm):
-#     model = Protocol
-#     tag = TagFilterField(model)
-    
 
 
 

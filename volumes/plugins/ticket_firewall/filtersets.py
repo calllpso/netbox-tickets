@@ -3,7 +3,6 @@ from .models import Rule, Ticket, Protocol
 
 from django.db.models import Q
 
-# from django_filters import CharFilter
 
 from utilities.filters import MultiValueCharFilter,MultiValueNumberFilter
 
@@ -15,7 +14,7 @@ class RuleFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = Rule
-        fields = ('ticket_id', 'index', 'source_prefix', 'destination_prefix','closed', 'action', 'opened',
+        fields = ('ticket_id', 'protocol', 'index', 'source_prefix', 'destination_prefix','closed', 'action', 'opened',
         )
     def search(self, queryset, name, value):
         # если добавить Q(tags=value), то будет ошибка. это только для тегов. qs без contains работает 
@@ -33,14 +32,3 @@ class TicketFilterSet(NetBoxModelFilterSet):
         qs_filter = Q(ticket_id__contains=value) | Q(id_directum__contains=value) | Q(status__contains=value)
         return queryset.filter(qs_filter)
 
-
-# class ProtocolFilterSet(NetBoxModelFilterSet):
-#     name = MultiValueCharFilter()
-
-    # class Meta:
-    #     model = Protocol
-    #     fields = ('name', )
-    # def search(self, queryset, name, value):
-    #     # если добавить Q(tags=value), то будет ошибка. это только для тегов. qs без contains работает 
-    #     qs_filter = Q(name__contains=value)
-    #     return queryset.filter(qs_filter)         

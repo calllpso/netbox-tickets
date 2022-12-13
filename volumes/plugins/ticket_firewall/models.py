@@ -125,7 +125,6 @@ class AttachFile(NetBoxModel):
 
 class Protocol(models.Model):
     name = models.CharField(max_length=30)
-
     def __str__(self):
         return self.name
     def get_absolute_url(self):
@@ -164,7 +163,7 @@ class Rule(NetBoxModel):
         blank=True
     )
 
-    protocol = models.ManyToManyField(Protocol, blank=True)
+    protocol = models.ManyToManyField(Protocol, blank=True, related_name="+")
 
     action = models.CharField(
         max_length=30,
@@ -199,7 +198,7 @@ class Rule(NetBoxModel):
         unique_together = ('ticket_id', 'index')
 
     def __str__(self):
-        return f'{self.ticket_id}: Rule {self.index}'
+        return f'Ticket {self.ticket_id}: Rule {self.index}'
 
     def get_action_color(self):
         return Rule_Action.colors.get(self.action)

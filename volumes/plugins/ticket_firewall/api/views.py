@@ -14,4 +14,3 @@ class RuleViewSet(NetBoxModelViewSet):
     queryset = models.Rule.objects.all()
     serializer_class = RuleSerializer
     filterset_class = filtersets.RuleFilterSet
-

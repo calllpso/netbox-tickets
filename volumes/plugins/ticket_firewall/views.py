@@ -1,5 +1,4 @@
 from netbox.views import generic
-from . import forms, models, tables
 from django.db.models import Count
 from . import forms, models, tables, filtersets
 
@@ -35,11 +34,19 @@ class TicketDeleteView(generic.ObjectDeleteView):
 
 
 
-
-
 #one
 class RuleView(generic.ObjectView):
+    
     queryset = models.Rule.objects.all()
+    
+    def get_extra_context(self, request, instance):
+        protocols = instance.protocol.all()
+        return {
+            'protocols': protocols
+        }
+
+
+
 #many
 class RuleListView(generic.ObjectListView):
     queryset = models.Rule.objects.all()
@@ -57,22 +64,19 @@ class RuleDeleteView(generic.ObjectDeleteView):
     queryset = models.Rule.objects.all()
 
 
-#protocols
-# class ProtocolView(generic.ObjectView):
-#     queryset = models.Protocol.objects.all()
-# #many
-# class ProtocolListView(generic.ObjectListView):
-#     queryset = models.Protocol.objects.all()
-#     table = tables.ProtocolTable ###
-#     filterset = filtersets.ProtocolFilterSet
-#     filterset_form = forms.ProtocolFilterForm 
+
+
+
+
+
+
+
 
 
 
 
 
 # IMPORT
-
 class TicketBulkImportView(generic.BulkImportView):
     queryset = models.Ticket.objects.all()
     model_form = forms.TicketCSVForm

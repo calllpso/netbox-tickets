@@ -1,7 +1,7 @@
 from random import choices
 from rest_framework import serializers
 from netbox.api.serializers import NetBoxModelSerializer
-from ..models import Ticket, Rule,AttachFile
+from ..models import Ticket, Rule,AttachFile, Protocol
 from netbox.api.serializers import WritableNestedSerializer
 
 class NestedTicketSerializer(WritableNestedSerializer):
@@ -33,12 +33,19 @@ class AttachFileSerializer(NetBoxModelSerializer):
             'ticket_id', 'file'
         )
 
+class ProtocolSerializer(NetBoxModelSerializer):
+    class Meta:
+        model = Protocol
+        fields = [
+            'name'
+        ]
+
 class RuleSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(
         view_name='plugins-api:ticket_firewall-api:rule-detail'
     )
     ticket_id = NestedTicketSerializer()
-
+    protocol = ProtocolSerializer(many=True, read_only=True)
     class Meta:
         model = Rule 
         fields = (

@@ -21,19 +21,6 @@ class TicketTable(NetBoxTable):
         )
         status = ChoiceFieldColumn()
 
-# class ChoiceFieldArrayColumn(tables.Column):
-#     def render(self, value):
-#         mark_str = ''
-#         colors = {'ip':'green',
-#             'tcp': 'blue',
-#             'udp': 'orange',
-#             'icmp': 'purple'}
-#         for i in value:
-#             mark_str = mark_str + f'<span class="badge bg-{colors[i]}">{i}</span>'
-#         return mark_safe(mark_str)
-
-#     def value(self, value):
-#         return value
 
 class RuleTable(NetBoxTable):
     ticket_id = tables.Column(
@@ -42,10 +29,10 @@ class RuleTable(NetBoxTable):
     index = tables.Column(
         linkify=True
     )
-    ############
-    # protocol = ChoiceFieldArrayColumn()
-    protocol = ChoiceFieldColumn()
 
+
+
+    ### цвет
     action = ChoiceFieldColumn()
 
     class Meta(NetBoxTable.Meta):
@@ -57,18 +44,4 @@ class RuleTable(NetBoxTable):
         default_columns = (
             'ticket_id', 'index', 'source_prefix', 'source_ports', 'destination_prefix',
             'destination_ports', 'protocol', 'action', 'opened', 'closed', 'actions',
-        )
-
-class ProtocolTable(NetBoxTable):
-    name = tables.Column(
-        linkify=True
-    )
-
-    class Meta(NetBoxTable.Meta):
-        model = Protocol
-        fields = (
-            'pk', 'id', 'name',
-        )
-        default_columns = (
-            'name', 
         )

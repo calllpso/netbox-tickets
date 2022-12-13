@@ -129,12 +129,12 @@ class Protocol(models.Model):
     name = models.CharField(max_length=30)
     def __str__(self):
         return self.name
-    def get_absolute_url(self):
-        return reverse('plugins:ticket_firewall:protocol', args=[self.pk])
-    def get_status_color(self):
-        return Protocol_colors.colors.get(self.status)
-
-
+    
+class PrefixRule(models.Model):
+    prefix = IPAddressField(
+        help_text='IPv4 or IPv6 address (with mask)',
+        blank=True, null=True, default=None
+    )
 
 class Rule(NetBoxModel):
     ticket_id = models.ForeignKey(
@@ -145,6 +145,8 @@ class Rule(NetBoxModel):
     )
 
     index = models.PositiveIntegerField(unique=True) #!! not blank=True
+
+    test_prefix = models.ManyToManyField(PrefixRule, blank=True, related_name="+")
 
     source_prefix = IPAddressField(
         help_text='IPv4 or IPv6 address (with mask)',

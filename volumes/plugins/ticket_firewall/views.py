@@ -73,6 +73,9 @@ class RuleDeleteView(generic.ObjectDeleteView):
 
 
 
+class PrefixRuleViewEdit(generic.ObjectEditView):
+    queryset = models.Rule.objects.all()
+    form = forms.PrefixRuleFormEdit
 
 
 

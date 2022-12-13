@@ -1,7 +1,7 @@
 from netbox.forms import NetBoxModelForm,NetBoxModelFilterSetForm
 from utilities.forms.fields import CommentField, DynamicModelChoiceField,TagFilterField, DynamicModelMultipleChoiceField
 from utilities.forms import DatePicker,widgets
-from .models import Ticket, Rule, Rule_Action, Ticket_status, AttachFile, Protocol
+from .models import Ticket, Rule, Rule_Action, Ticket_status, AttachFile, Protocol, PrefixRule
 from django import forms
 from django.db.models import Max
 
@@ -46,6 +46,7 @@ class TicketFormEdit(NetBoxModelForm):
         fields = ('ticket_id', 'ticket_name', 'status', 'id_directum', 'tags', 'description', 'comments')
 
 
+
 class RuleFormEdit(NetBoxModelForm):
     ###из названия ниже берет создает поле в форме создания
     ticket_id = DynamicModelChoiceField(
@@ -73,12 +74,21 @@ class RuleFormEdit(NetBoxModelForm):
 # class HelpDynamicModelChoiceField(DynamicModelChoiceField):
 
 
+class PrefixRuleFormEdit(NetBoxModelForm):
+    class Meta:
+        model = PrefixRule
+        fields = ('prefix',)
+
 class RuleFormCreate(NetBoxModelForm):
     ###из названия ниже берет создает поле в форме создания
     ticket_id = DynamicModelChoiceField(
         queryset=Ticket.objects.all()
     )
-    
+    #add many field for many2many
+    #save rule after prefix
+    #https://stackoverflow.com/questions/17948018/add-custom-form-fields-that-are-not-part-of-the-model-django
+    test_prefix = PrefixRuleFormEdit()
+    #is select ticket in form, show its ticket_name
     #it works. 
     # but: django.urls.exceptions.NoReverseMatch: Reverse for 'protocol-list' not found. 'protocol-list' is not a valid view function or pattern name.
     # protocol = DynamicModelChoiceField(
@@ -108,7 +118,7 @@ class RuleFormCreate(NetBoxModelForm):
     class Meta:
         model = Rule
         fields = (
-            'ticket_id', 'index', 'source_ports', 'source_prefix', 'destination_prefix',
+            'ticket_id', 'test_prefix', 'index', 'source_ports', 'source_prefix', 'destination_prefix',
             'destination_ports', 'protocol', 'action', 'description', 'opened', 'closed', 'tags',
         )
         widgets = {

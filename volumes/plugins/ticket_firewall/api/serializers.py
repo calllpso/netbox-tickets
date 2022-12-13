@@ -1,7 +1,7 @@
 from random import choices
 from rest_framework import serializers
 from netbox.api.serializers import NetBoxModelSerializer
-from ..models import Ticket, Rule,AttachFile, Protocol
+from ..models import Ticket, Rule,AttachFile, Protocol, PrefixRule
 from netbox.api.serializers import WritableNestedSerializer
 
 class NestedTicketSerializer(WritableNestedSerializer):
@@ -38,6 +38,12 @@ class ProtocolSerializer(NetBoxModelSerializer):
         model = Protocol
         fields = [
             'name'
+        ]
+class PrefixRuleSerializer(NetBoxModelSerializer):
+    class Meta:
+        model = PrefixRule
+        fields = [
+            'prefix'
         ]
 
 class RuleSerializer(NetBoxModelSerializer):

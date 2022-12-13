@@ -26,9 +26,15 @@ class TicketListView(generic.ObjectListView):
     table = tables.TicketTable
     filterset = filtersets.TicketFilterSet
     filterset_form = forms.TicketFilterForm
+
+class TicketCreateView(generic.ObjectEditView):
+    queryset = models.Ticket.objects.all() 
+    form = forms.TicketFormCreate
+
 class TicketEditView(generic.ObjectEditView):
     queryset = models.Ticket.objects.all()
-    form = forms.TicketForm
+    form = forms.TicketFormEdit
+
 class TicketDeleteView(generic.ObjectDeleteView):
     queryset = models.Ticket.objects.all()
 
@@ -53,6 +59,7 @@ class RuleListView(generic.ObjectListView):
     table = tables.RuleTable ###
     filterset = filtersets.RuleFilterSet
     filterset_form = forms.RuleFilterForm
+
 class RuleCreateView(generic.ObjectEditView):
     queryset = models.Rule.objects.all()
     form = forms.RuleFormCreate
@@ -60,6 +67,7 @@ class RuleCreateView(generic.ObjectEditView):
 class RuleEditView(generic.ObjectEditView):
     queryset = models.Rule.objects.all()
     form = forms.RuleFormEdit
+
 class RuleDeleteView(generic.ObjectDeleteView):
     queryset = models.Rule.objects.all()
 

@@ -5,7 +5,7 @@ from netbox.views.generic import ObjectChangeLogView,ObjectJournalView
 urlpatterns = (
     # Ticket lists
     path('tickets/', views.TicketListView.as_view(), name='ticket_list'),
-    path('tickets/add/', views.TicketEditView.as_view(), name='ticket_add'),
+    path('tickets/add/', views.TicketCreateView.as_view(), name='ticket_add'),
     path('tickets/<int:pk>/', views.TicketView.as_view(), name='ticket'),           # Этот ticket указывается в get_absolute_url в models
     path('tickets/<int:pk>/edit/', views.TicketEditView.as_view(), name='ticket_edit'),
     path('tickets/<int:pk>/delete/', views.TicketDeleteView.as_view(), name='ticket_delete'),

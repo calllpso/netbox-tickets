@@ -22,12 +22,28 @@ class AttachFileForm(NetBoxModelForm):
         model = AttachFile
         fields = ('ticket_id','file',)
 
-class TicketForm(NetBoxModelForm):
-
+class TicketFormCreate(NetBoxModelForm):
     comments = CommentField()
     class Meta:
         model = Ticket
-        fields = ('ticket_id', 'status', 'id_directum', 'tags', 'description', 'comments')
+        fields = ('ticket_id', 'ticket_name', 'status', 'id_directum', 'tags', 'description', 'comments')
+
+    #нужно index д.б. всегда required=True: это ж ссылка из тикета 
+    def __init__(self, *args, **kwargs):
+        super(TicketFormCreate,self).__init__(*args, **kwargs)
+        try:
+            max_index=Ticket.objects.filter().aggregate(max_index=Max('ticket_id'))
+            ticket_id = max_index['max_index'] + 1
+            ticket_id = int(max_index['max_index']) + 1
+            self.initial['ticket_id'] = ticket_id
+        except:
+            pass
+
+class TicketFormEdit(NetBoxModelForm):
+    comments = CommentField()
+    class Meta:
+        model = Ticket
+        fields = ('ticket_id', 'ticket_name', 'status', 'id_directum', 'tags', 'description', 'comments')
 
 
 class RuleFormEdit(NetBoxModelForm):
@@ -54,6 +70,9 @@ class RuleFormEdit(NetBoxModelForm):
             'closed': DatePicker()
         }
 
+# class HelpDynamicModelChoiceField(DynamicModelChoiceField):
+
+
 class RuleFormCreate(NetBoxModelForm):
     ###из названия ниже берет создает поле в форме создания
     ticket_id = DynamicModelChoiceField(
@@ -72,7 +91,6 @@ class RuleFormCreate(NetBoxModelForm):
         required=False
     )
 
-    
     #нужно index д.б. всегда required=True: это ж ссылка из тикета 
     def __init__(self, *args, **kwargs):
         super(RuleFormCreate,self).__init__(*args, **kwargs)
@@ -106,6 +124,12 @@ class RuleFilterForm(NetBoxModelFilterSetForm):
         required=False
     )
     
+    index = forms.ModelChoiceField(
+        widget = widgets.StaticSelect, 
+        queryset = Rule.objects.values_list('index', flat =True),
+        required=False
+    )
+
     action = forms.ChoiceField(
         choices=Rule_Action,
         widget = widgets.StaticSelect,
@@ -117,10 +141,6 @@ class RuleFilterForm(NetBoxModelFilterSetForm):
         queryset = Protocol.objects.all(),
         required=False
     )
-    
-    # queryset_model_prefix=Prefix.objects.values_list('prefix', flat =True).exclude(prefix=None)
-    # queryset_source_prefix=Rule.objects.values_list('source_prefix', flat =True).exclude(source_prefix=None)
-    # queryset = queryset_model_prefix.union(queryset_source_prefix),
 
     source_prefix = forms.ModelChoiceField(
         widget = widgets.StaticSelect, 
@@ -152,6 +172,12 @@ class TicketFilterForm(NetBoxModelFilterSetForm):
     ticket_id = forms.ModelMultipleChoiceField(
         widget = widgets.StaticSelectMultiple, 
         queryset=Ticket.objects.values_list('ticket_id', flat =True),
+        required=False
+        )
+
+    ticket_name = forms.ModelMultipleChoiceField(
+        widget = widgets.StaticSelectMultiple, 
+        queryset=Ticket.objects.values_list('ticket_name', flat =True),
         required=False
         )
 

@@ -14,8 +14,8 @@ class TicketTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = Ticket
-        fields = ('pk', 'id', 'ticket_id', 'rule_count', 'status', 'id_directum', 'actions', 'description', 'comments')
-        default_columns = ('ticket_id', 'id_directum', 'rule_count', 'status', 'description')
+        fields = ('pk', 'id', 'ticket_id', 'ticket_name', 'rule_count', 'status', 'id_directum', 'actions', 'description', 'comments')
+        default_columns = ('ticket_id', 'ticket_name', 'id_directum', 'rule_count', 'status', 'description')
         ticket_id = tables.Column(
             linkify=True
         )
@@ -26,11 +26,10 @@ class RuleTable(NetBoxTable):
     ticket_id = tables.Column(
         linkify=True
     )
+
     index = tables.Column(
         linkify=True
     )
-
-
 
     ### цвет
     action = ChoiceFieldColumn()

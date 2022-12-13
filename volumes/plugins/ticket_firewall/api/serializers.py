@@ -10,7 +10,7 @@ class NestedTicketSerializer(WritableNestedSerializer):
     )
     class Meta:
         model = Ticket
-        fields = ('id', 'url', 'display', 'ticket_id')
+        fields = ('id', 'url', 'display', 'ticket_id', 'ticket_name')
 
 class TicketSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(
@@ -21,7 +21,7 @@ class TicketSerializer(NetBoxModelSerializer):
     class Meta:
         model = Ticket
         fields = (
-            'id', 'display', 'ticket_id', 'status', 'id_directum', 'tags', 'custom_fields', 'created',
+            'id', 'display', 'ticket_id', 'ticket_name',  'status', 'id_directum', 'tags', 'custom_fields', 'created',
             'last_updated', 'url', 'rule_count', 'description'
         )
 

@@ -39,21 +39,28 @@ class Rule_Action(ChoiceSet):
         ('drop', 'drop', 'red'),
     ]
 
-# class Rule_Protocol(ChoiceSet):  #это должно остаться и для массива выбора
-#     key = 'Rule.protocol'
-#     CHOICES = [
-#         ('ip', 'IP', 'green'),
-#         ('tcp', 'TCP', 'blue'),
-#         ('udp', 'UDP', 'orange'),
-#         ('icmp', 'ICMP', 'purple'),
-#     ]
-
+class Protocol_colors(ChoiceSet):
+    key = 'Protocol.name'
+    ip = 'ip'
+    tcp = 'tcp'
+    icmp = 'icmp'
+    CHOICES = [
+        (ip, 'ip', 'green'),
+        (tcp, 'tcp', 'red'),
+        (icmp, 'icmp', 'orange'),
+    ]
 
 class Ticket(NetBoxModel):
-    ticket_id = models.CharField(
-        max_length=100,
+    ticket_id = models.PositiveIntegerField(
         unique=True
     )
+
+    ticket_name = models.CharField(
+        max_length=100,
+        unique=True,
+        blank=True
+    )
+
     status = models.CharField(
         max_length=30,
         choices=Ticket_status,
@@ -72,13 +79,14 @@ class Ticket(NetBoxModel):
     )
 
     clone_fields = (
-        'ticket_id', 'status', 'id_directum', 'description', 'comments'
+        'ticket_id', 'ticket_name', 'status', 'id_directum', 'description', 'comments'
     )
 
     class Meta:
         ordering = ('ticket_id',)
+    # возвращает для RuleTable
     def __str__(self):
-        return self.ticket_id
+        return str(self.ticket_id)
     def get_status_color(self):
         return Ticket_status.colors.get(self.status)
     def get_absolute_url(self):
@@ -93,14 +101,10 @@ class AttachFile(NetBoxModel):
         related_name='file'
     )
     file = models.FileField(storage=fs)
-
     def __str__(self):
         return f'{self.ticket_id.id}: {self.file.name}'
-
-
     def get_absolute_url(self):
         return reverse('plugins:ticket_firewall:ticket', args=[self.ticket_id.id])
-
 
     @property
     def size(self):
@@ -109,13 +113,11 @@ class AttachFile(NetBoxModel):
         catch other exceptions that we know other storage back-ends to throw.
         """
         expected_exceptions = [OSError]
-
         try:
             from botocore.exceptions import ClientError
             expected_exceptions.append(ClientError)
         except ImportError:
             pass
-
         try:
             return self.file.size
         except tuple(expected_exceptions):
@@ -129,7 +131,8 @@ class Protocol(models.Model):
         return self.name
     def get_absolute_url(self):
         return reverse('plugins:ticket_firewall:protocol', args=[self.pk])
-
+    def get_status_color(self):
+        return Protocol_colors.colors.get(self.status)
 
 
 
@@ -212,40 +215,6 @@ class Rule(NetBoxModel):
 
 
 
-
-# bbq_sauce = Sauce.objects.create(name="Barbeque")
-
-# class Rule_Protocol_choisec(ChoiceSet):  #это должно остаться и для массива выбора
-#     key = 'Rule.protocol'
-#     CHOICES = [
-#         ('ip', 'IP', 'green'),
-#         ('tcp', 'TCP', 'blue'),
-#         ('udp', 'UDP', 'orange'),
-#         ('icmp', 'ICMP', 'purple'),
-#     ]
-
-# class ProtocolElections(models.Model):..
-#     ELECTION_TYPE  = (
-#         ('ip', 'IP'),
-#         ('tcp', 'TCP'),
-#         ('udp', 'UDP'),
-#         ('icmp', 'ICMP'),
-#     )
-#     election_type = models.CharField(null=True, max_length=100, default=None, choices=ELECTION_TYPE, verbose_name = 'Which elections do you regularly vote in or intend to vote in? Select all that apply.')
-#     def __unicode__(self): #?
-#         return self
-#     def __str__(self):
-#         return self.headline
-# class RuleProtocolElections(models.Model):..
-#     ELECTION_TYPE  = (
-#         ('ip', 'IP'),
-#         ('tcp', 'TCP'),
-#         ('udp', 'UDP'),
-#         ('icmp', 'ICMP'),
-#     )
-#     election_type = models.CharField(null=True, max_length=100, default=None, choices=ELECTION_TYPE )
-#     def __unicode__(self): #?
-#         return self
 
 
 # эти ресиверы мутят удаление файла из файловой системы. Без них будет удаляться запись только из Базы Данных
